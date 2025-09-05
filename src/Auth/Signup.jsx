@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Signup() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [acceptedTerms, setAcceptedTerms] = useState(false);
+  
     const navigate = useNavigate();
     const handleSigninClick = () => {
          navigate('/Login');
@@ -15,6 +15,10 @@ export default function Signup() {
         // Navigate back
        navigate(-1);
     };
+
+    const HandleCreateAccount = () => {
+        navigate('/Mylinks')
+    }
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -26,7 +30,7 @@ export default function Signup() {
 
     return (
         <>
-            <div className="bg-gradient-to-br from-gray-100 via-white to-blue-50 min-h-screen">
+            <div className="bg-gradient-to-br from-gray-200 via-white to-white min-h-screen">
                 <button
                     className="flex items-center gap-3 px-4 py-3 ml-6 pt-6 rounded-lg hover:bg-white/60 transition-all duration-200"
                     onClick={handleBackClick}
@@ -164,13 +168,9 @@ export default function Signup() {
                             </div>
 
                             <button
-                                className={`w-full py-3 px-4 rounded flex items-center justify-center gap-2 font-medium transition-all duration-200 transform hover:-translate-y-0.5 ${
-                                    acceptedTerms 
-                                        ? 'bg-gradient-to-r from-blue-700 via-blue-600 to-purple-600 text-white hover:shadow-lg hover:shadow-blue-500/25' 
-                                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                }`}
+                                className="w-full py-3 px-4 rounded flex items-center justify-center gap-2 font-medium transition-all duration-200 transform hover:-translate-y-0.5 bg-gradient-to-r from-blue-700 via-blue-600 to-purple-600 text-white hover:shadow-lg hover:shadow-blue-500/25"
                                 type="submit"
-                                disabled={!acceptedTerms}
+                                onClick={HandleCreateAccount}
                             >
                                 <UserPlus className="w-5 h-5" />
                                 Create your account
