@@ -76,8 +76,7 @@ const buttonColors = [
 
       </div>
      
-
-     <div className="border border-gray-100 rounded mt-5 p-3 shadow">
+<div className="border border-gray-100 rounded mt-5 p-3 shadow">
   <label className="block text-sm font-medium">Background</label>
   <div className="grid grid-cols-4 gap-2 mt-4">
     {backgroundOptions.map((bg) => (
@@ -91,6 +90,17 @@ const buttonColors = [
         title={bg.name}
       />
     ))}
+    {/* Custom Color Picker */}
+    <label className="w-8 h-8 rounded border cursor-pointer flex items-center justify-center bg-gray-100">
+      <Palette className="w-4 h-4 text-gray-600" />
+      <input
+        type="color"
+        className="hidden"
+        onChange={(e) =>
+          setProfile({ ...profile, background: e.target.value })
+        }
+      />
+    </label>
   </div>
 </div>
 
@@ -143,10 +153,12 @@ const buttonColors = [
   </div>
 </div>
 
-        
-      <div className="mt-5">
-   <label className="text-sm font-medium flex gap-1 items-center">Button Color</label>
-   <div className="grid grid-cols-4 gap-2 mt-4">
+   
+<div className="border border-gray-100 rounded mt-5 p-3 shadow">
+  <label className="text-sm font-medium flex gap-1 items-center">
+    Button Color
+  </label>
+  <div className="grid grid-cols-4 gap-2 mt-4">
     {buttonColors.map((color, idx) => (
       <button
         key={idx}
@@ -157,9 +169,21 @@ const buttonColors = [
         }`}
       />
     ))}
-   </div>
-   </div>
+    {/* Custom Color Picker */}
+    <label className="w-8 h-8 rounded-full border cursor-pointer flex items-center justify-center bg-gray-100">
+      <Palette className="w-4 h-4 text-gray-600" />
+      <input
+        type="color"
+        className="hidden"
+        onChange={(e) =>
+          setProfile({ ...profile, buttonColor: e.target.value })
+        }
+      />
+    </label>
+  </div>
+</div>
 
+       <button onClick={() => navigate('/Preview')} className="bg-gradient-to-r from-blue-700 to-purple-500 via-blue-700 hover:bg-purple-700 p-2 rounded mt-5 text-white">View Preview</button>
       </div>
     </div>
   );

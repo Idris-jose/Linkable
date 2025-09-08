@@ -6,6 +6,7 @@ import Sidebar from "./Navigation/sidebar"
 import Customize from "./pages/Customize"
 import QrCode from "./pages/Qrcode"
 import Mylinks from "./pages/Mylinks"
+import Preview from "./pages/Preview"
 
 function LayoutWithSidebar({ children }) {
   return (
@@ -30,6 +31,7 @@ function App() {
      <Route path="/Mylinks" element={<LayoutWithSidebar><Mylinks/></LayoutWithSidebar>}/>
      <Route path="/Customize" element={<Customize/>}/>
      <Route path="/Qrcode" element={<LayoutWithSidebar><QrCode/></LayoutWithSidebar>}/>
+      <Route path="/Preview" element={<Preview/>}/>
     </Routes>
     </BrowserRouter>
 

@@ -2,6 +2,15 @@ import React from "react";
 import { ExternalLink, Instagram, Twitter, Youtube, Mail, Phone, Globe } from "lucide-react";
 
 export default function Preview({ profile }) {
+  // Add null check for profile
+  if (!profile) {
+    return (
+      <div className="flex-1 flex items-center justify-center text-gray-500">
+        <p>Loading profile...</p>
+      </div>
+    );
+  }
+
   const getButtonStyle = () => {
     const base =
       "w-full py-3 px-4 flex items-center justify-between text-sm transition-all duration-200 hover:scale-105 hover:shadow-lg";
@@ -23,10 +32,14 @@ export default function Preview({ profile }) {
     return <Globe className="w-5 h-5" />;
   };
 
-  const getBackgroundStyle = () =>
-    profile.background?.startsWith("linear-gradient")
+  const getBackgroundStyle = () => {
+    // Add null checks for background property
+    if (!profile.background) return { backgroundColor: '#000000' }; // Default background
+    
+    return profile.background.startsWith("linear-gradient")
       ? { background: profile.background }
       : { backgroundColor: profile.background };
+  };
 
   return (
     <div className="flex-1 flex flex-col text-white" style={getBackgroundStyle()}>
@@ -61,7 +74,7 @@ export default function Preview({ profile }) {
 
       {/* Links */}
       <div className="flex-1 overflow-y-auto px-6 space-y-3">
-        {profile.links
+        {profile.links && profile.links
           .filter((link) => link.active)
           .map((link, i) => (
             <a

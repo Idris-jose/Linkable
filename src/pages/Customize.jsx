@@ -26,9 +26,13 @@ export default function Customize() {
       <CustomizeSidebar profile={profile} setProfile={setProfile} />
 
       {/* Live Preview */}
+     
+      
       <PhoneFrame>
       <Preview profile={profile} />
       </PhoneFrame>
+      
+      
     </div>
   );
 }
