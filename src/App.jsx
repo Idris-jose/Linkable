@@ -28,7 +28,7 @@ function App() {
      <Route path="/Login" element={<Login/>}/>
      <Route path="/Signup" element={<Signup/>}/>
      <Route path="/Mylinks" element={<LayoutWithSidebar><Mylinks/></LayoutWithSidebar>}/>
-     <Route path="/Customize" element={<LayoutWithSidebar><Customize/></LayoutWithSidebar>}/>
+     <Route path="/Customize" element={<Customize/>}/>
      <Route path="/Qrcode" element={<LayoutWithSidebar><QrCode/></LayoutWithSidebar>}/>
     </Routes>
     </BrowserRouter>
