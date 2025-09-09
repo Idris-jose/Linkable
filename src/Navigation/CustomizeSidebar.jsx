@@ -1,190 +1,329 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft,Palette } from "lucide-react";
+import { ArrowLeft, Palette, Type, User, Upload } from "lucide-react";
+import { templates } from "../data/templates";
 
 export default function CustomizeSidebar({ profile, setProfile }) {
     const navigate = useNavigate();
 
-
     const backgroundOptions = [
-  { id: 'gradient', name: 'Gradient', value: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-  { id: 'gradient2', name: 'Ocean', value: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-  { id: 'gradient3', name: 'Sunset', value: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
-  { id: 'gradient4', name: 'Forest', value: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
-  { id: 'solid1', name: 'Navy', value: '#1a365d' },
-  { id: 'solid2', name: 'Purple', value: '#553c9a' },
-  { id: 'solid3', name: 'Green', value: '#22543d' },
-  { id: 'solid4', name: 'Pink', value: '#97266d' },
-];
+        { id: 'gradient', name: 'Gradient', value: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+        { id: 'gradient2', name: 'Ocean', value: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)' },
+        { id: 'gradient3', name: 'Sunset', value: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+        { id: 'gradient4', name: 'Forest', value: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+        { id: 'gradient5', name: 'Purple', value: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+        { id: 'gradient6', name: 'Pink', value: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)' },
+        { id: 'solid1', name: 'Navy', value: '#1a365d' },
+        { id: 'solid2', name: 'Purple', value: '#553c9a' },
+        { id: 'solid3', name: 'Green', value: '#22543d' },
+        { id: 'solid4', name: 'Pink', value: '#97266d' },
+    ];
 
-const buttonColors = [
-  '#000000', '#ffffff', '#ef4444', '#f97316', '#eab308', 
-  '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899'
-];
+    const buttonColors = [
+        '#000000', '#ffffff', '#ef4444', '#f97316', '#eab308', 
+        '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899'
+    ];
 
-  return (
-    <div className="md:block w-70 h-full bg-white shadow-2xl shadow-black/30  p-3 transition-all duration-300 ">
-     <h1 className="text-sm gap-3 flex items-center cursor-pointer hover:text-blue-700 transition-colors" onClick={ () => navigate('/Mylinks')}><ArrowLeft className="w-5"/> Back to dashboard</h1>
-         
-    <div className="mt-3">
-      <h2 className="text-xl font-semibold">Customize Profile</h2>
-      <p className="text-gray-700 text-sm">Personalize your link hub</p>
-    </div>
+    const handlePreviewNavigation = () => {
+        navigate('/Preview', { state: { profile } });
+    };
 
-     <div className="border-gray-300 border mt-5 mb-5 " />
-
-     <div className="border border-gray-100 rounded p-3 shadow">
-      {/* Profile Info */}
-      <div>
-        <label className="block text-sm font-medium">Display Name</label>
-        <input
-          value={profile.displayName}
-          onChange={(e) =>
-            setProfile({ ...profile, displayName: e.target.value })
-          }
-          className="w-full bg-gray-200 text-sm p-2 rounded mt-1"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mt-4">Bio</label>
-        <textarea
-          value={profile.bio}
-          onChange={(e) =>
-            setProfile({ ...profile, bio: e.target.value })
-          }
-          className="w-full bg-gray-200 text-sm p-2 rounded mt-1"
-        />
-      </div>
-
-      <div>
-  <label className="block text-sm font-medium mb-1">Profile Picture</label>
-  <label className="inline-flex items-center px-4 py-2  text-black border border-gray-500 rounded cursor-pointer  transition">
-    Upload Picture
-    <input
-      type="file"
-      accept="image/*"
-      className="hidden"
-      onChange={(e) =>
-        setProfile({
-          ...profile,
-          profilePicture: URL.createObjectURL(e.target.files[0]),
-        })
-      }
-    />
-  </label>
-</div>
-
-      </div>
-     
-<div className="border border-gray-100 rounded mt-5 p-3 shadow">
-  <label className="block text-sm font-medium">Background</label>
-  <div className="grid grid-cols-4 gap-2 mt-4">
-    {backgroundOptions.map((bg) => (
-      <button
-        key={bg.id}
-        onClick={() => setProfile({ ...profile, background: bg.value })}
-        style={{ background: bg.value }}
-        className={`w-8 h-8 rounded ${
-          profile.background === bg.value ? "ring-2 ring-black" : ""
-        }`}
-        title={bg.name}
-      />
-    ))}
-    {/* Custom Color Picker */}
-    <label className="w-8 h-8 rounded border cursor-pointer flex items-center justify-center bg-gray-100">
-      <Palette className="w-4 h-4 text-gray-600" />
-      <input
-        type="color"
-        className="hidden"
-        onChange={(e) =>
-          setProfile({ ...profile, background: e.target.value })
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                setProfile({
+                    ...profile,
+                    profilePicture: event.target.result
+                });
+            };
+            reader.readAsDataURL(file);
         }
-      />
-    </label>
+    };
+
+    return (
+        <div className="w-96 bg-white shadow-lg border-r border-gray-200 overflow-y-auto">
+            {/* Header */}
+            <div className="p-6 border-b border-gray-200">
+                <button 
+                    className="text-sm gap-3 flex items-center cursor-pointer hover:text-indigo-600 transition-colors mb-4"
+                    onClick={() => navigate('/Mylinks')}
+                >
+                    <ArrowLeft className="w-4 h-4"/> Back to Dashboard
+                </button>
+                
+                <h1 className="font-bold text-2xl text-gray-900 mb-1">Customize Profile</h1>
+                <p className="text-gray-600">Personalize your link hub</p>
+            </div>
+
+            <div className="p-6 space-y-6">
+                {/* Profile Information Card */}
+                <div className="border border-gray-200 rounded-lg shadow-sm">
+                    <div className="p-4 border-b border-gray-100">
+                        <h3 className="font-semibold text-gray-900 flex items-center">
+                            <User className="w-5 h-5 mr-2 text-gray-600" />
+                            Profile Information
+                        </h3>
+                    </div>
+                    <div className="p-4 space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Display Name
+                            </label>
+                            <input
+                                type="text"
+                                value={profile.displayName || ''}
+                                onChange={(e) =>
+                                    setProfile({ ...profile, displayName: e.target.value })
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                placeholder="Enter your display name"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Bio
+                            </label>
+                            <textarea
+                                value={profile.bio || ''}
+                                onChange={(e) =>
+                                    setProfile({ ...profile, bio: e.target.value })
+                                }
+                                rows="3"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                                placeholder="Tell people about yourself..."
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Profile Picture
+                            </label>
+                            <div className="flex items-center space-x-3">
+                                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold overflow-hidden">
+                                    {profile.profilePicture ? (
+                                        <img 
+                                            src={profile.profilePicture} 
+                                            alt="Profile" 
+                                            className="w-full h-full object-cover"
+                                        />
+                                    ) : (
+                                        profile.displayName?.split(' ').map(n => n[0]).join('') || 'U'
+                                    )}
+                                </div>
+                                <label className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <Upload className="w-4 h-4 mr-2" />
+                                    Upload
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={handleImageUpload}
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Background Card */}
+                <div className="border border-gray-200 rounded-lg shadow-sm">
+                    <div className="p-4 border-b border-gray-100">
+                        <h3 className="font-semibold text-gray-900 flex items-center">
+                            <Palette className="w-5 h-5 mr-2 text-gray-600" />
+                            Background
+                        </h3>
+                    </div>
+                    <div className="p-4">
+                        <div className="grid grid-cols-4 gap-2">
+                            {backgroundOptions.map((bg) => (
+                                <button
+                                    key={bg.id}
+                                    onClick={() => setProfile({ ...profile, background: bg.value })}
+                                    style={bg.value.startsWith('linear-gradient') 
+                                        ? { background: bg.value }
+                                        : { backgroundColor: bg.value }
+                                    }
+                                    className={`w-12 h-12 rounded-lg border-2 transition-all hover:scale-105 ${
+                                        profile.background === bg.value 
+                                            ? "border-indigo-600 ring-2 ring-indigo-200" 
+                                            : "border-gray-200 hover:border-gray-300"
+                                    }`}
+                                    title={bg.name}
+                                />
+                            ))}
+                            {/* Custom Color Picker */}
+                            <label className="w-12 h-12 rounded-lg border-2 border-gray-200 cursor-pointer flex items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors">
+                                <Palette className="w-5 h-5 text-gray-600" />
+                                <input
+                                    type="color"
+                                    className="hidden"
+                                    onChange={(e) =>
+                                        setProfile({ ...profile, background: e.target.value })
+                                    }
+                                />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                   
+                   {/* Template Presets */}
+<div className="border border-gray-200 rounded-lg shadow-sm">
+  <div className="p-4 border-b border-gray-100">
+    <h3 className="font-semibold text-gray-900">Templates</h3>
   </div>
-</div>
-
-
-    <div className="border border-gray-100 rounded mt-5 p-3 shadow">
-      {/* Font Family */}
-      <div>
-        <label className="block text-sm font-medium">Font Family</label>
-        <select
-  value={profile.font}
-  onChange={(e) => setProfile({ ...profile, font: e.target.value })}
-  className="w-full border p-2 rounded"
->
-  <option value="font-sans">Inter</option>
-  <option value="font-serif">Serif</option>
-  <option value="font-mono">Monospace</option>
-  <option value="font-poppins">Poppins</option> 
-</select>
-
-      </div>
-      </div>
-
-    <div className="border border-gray-100 rounded mt-5 p-3 shadow">
-      <div>
-  <label className="block text-sm font-medium">Button Style</label>
-  <div className="flex gap-3 mt-2">
-    {/* Rounded */}
-    <button
-      onClick={() => setProfile({ ...profile, buttonStyle: "rounded" })}
-      className={`w-16 h-8 bg-gray-300 ${
-        profile.buttonStyle === "rounded" ? "ring-1 ring-black" : ""
-      } rounded-md`}
-    ></button>
-
-    {/* Square */}
-    <button
-      onClick={() => setProfile({ ...profile, buttonStyle: "square" })}
-      className={`w-16 h-8 bg-gray-300 ${
-        profile.buttonStyle === "square" ? "ring-2 ring-black" : ""
-      } rounded-none`}
-    ></button>
-
-    {/* Pill */}
-    <button
-      onClick={() => setProfile({ ...profile, buttonStyle: "pill" })}
-      className={`w-16 h-8 bg-gray-300 ${
-        profile.buttonStyle === "pill" ? "ring-2 ring-black" : ""
-      } rounded-full`}
-    ></button>
-  </div>
-</div>
-
-   
-<div className="border border-gray-100 rounded mt-5 p-3 shadow">
-  <label className="text-sm font-medium flex gap-1 items-center">
-    Button Color
-  </label>
-  <div className="grid grid-cols-4 gap-2 mt-4">
-    {buttonColors.map((color, idx) => (
+  <div className="p-4 grid grid-cols-2 gap-3">
+    {templates.map((t) => (
       <button
-        key={idx}
-        onClick={() => setProfile({ ...profile, buttonColor: color })}
-        style={{ background: color }}
-        className={`w-8 h-8 rounded-full ${
-          profile.buttonColor === color ? "ring-2 ring-black" : ""
-        }`}
-      />
-    ))}
-    {/* Custom Color Picker */}
-    <label className="w-8 h-8 rounded-full border cursor-pointer flex items-center justify-center bg-gray-100">
-      <Palette className="w-4 h-4 text-gray-600" />
-      <input
-        type="color"
-        className="hidden"
-        onChange={(e) =>
-          setProfile({ ...profile, buttonColor: e.target.value })
+        key={t.id}
+        onClick={() =>
+          setProfile({
+            ...profile,
+            templateId: t.id,
+            background: t.background,
+            buttonStyle: t.buttonStyle,
+            buttonColor: t.buttonColor,
+          })
         }
-      />
-    </label>
+        className={`p-3 rounded-lg border-2 transition-all ${
+          profile.templateId === t.id
+            ? "border-indigo-600 bg-indigo-50"
+            : "border-gray-200 hover:border-gray-300"
+        }`}
+      >
+        <div
+          className="h-12 rounded-lg"
+          style={{
+            background: t.background,
+          }}
+        />
+        <p className="mt-2 text-xs font-medium">{t.name}</p>
+      </button>
+    ))}
   </div>
 </div>
 
-       <button onClick={() => navigate('/Preview')} className="bg-gradient-to-r from-blue-700 to-purple-500 via-blue-700 hover:bg-purple-700 p-2 rounded mt-5 text-white">View Preview</button>
-      </div>
-    </div>
-  );
+                {/* Font Family Card */}
+                <div className="border border-gray-200 rounded-lg shadow-sm">
+                    <div className="p-4 border-b border-gray-100">
+                        <h3 className="font-semibold text-gray-900 flex items-center">
+                            <Type className="w-5 h-5 mr-2 text-gray-600" />
+                            Font Family
+                        </h3>
+                    </div>
+                    <div className="p-4">
+                        <div className="space-y-2">
+                            <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="fontFamily"
+                                    value="Inter"
+                                    checked={profile.font === 'font-sans' || profile.font === 'Inter'}
+                                    onChange={() => setProfile({ ...profile, font: 'Inter' })}
+                                    className="text-indigo-600 focus:ring-indigo-500"
+                                />
+                                <span className="text-sm font-medium text-gray-700 font-sans">Inter</span>
+                            </label>
+                            <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="fontFamily"
+                                    value="Poppins"
+                                    checked={profile.font === 'font-poppins' || profile.font === 'Poppins'}
+                                    onChange={() => setProfile({ ...profile, font: 'Poppins' })}
+                                    className="text-indigo-600 focus:ring-indigo-500"
+                                />
+                                <span className="text-sm font-medium text-gray-700" style={{fontFamily: 'Poppins'}}>Poppins</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Button Style Card */}
+                <div className="border border-gray-200 rounded-lg shadow-sm">
+                    <div className="p-4 border-b border-gray-100">
+                        <h3 className="font-semibold text-gray-900">Button Style</h3>
+                    </div>
+                    <div className="p-4 space-y-4">
+                        <div className="grid grid-cols-3 gap-2">
+                            <button
+                                onClick={() => setProfile({ ...profile, buttonStyle: "rounded" })}
+                                className={`p-3 border-2 rounded-lg flex flex-col items-center space-y-1 transition-all hover:bg-gray-50 ${
+                                    profile.buttonStyle === "rounded" 
+                                        ? "border-indigo-600 bg-indigo-50" 
+                                        : "border-gray-200"
+                                }`}
+                            >
+                                <div className="w-6 h-6 bg-gray-400 rounded-lg" />
+                                <span className="text-xs font-medium">Rounded</span>
+                            </button>
+
+                            <button
+                                onClick={() => setProfile({ ...profile, buttonStyle: "square" })}
+                                className={`p-3 border-2 rounded-lg flex flex-col items-center space-y-1 transition-all hover:bg-gray-50 ${
+                                    profile.buttonStyle === "square" 
+                                        ? "border-indigo-600 bg-indigo-50" 
+                                        : "border-gray-200"
+                                }`}
+                            >
+                                <div className="w-6 h-6 bg-gray-400 rounded-none" />
+                                <span className="text-xs font-medium">Square</span>
+                            </button>
+
+                            <button
+                                onClick={() => setProfile({ ...profile, buttonStyle: "pill" })}
+                                className={`p-3 border-2 rounded-lg flex flex-col items-center space-y-1 transition-all hover:bg-gray-50 ${
+                                    profile.buttonStyle === "pill" 
+                                        ? "border-indigo-600 bg-indigo-50" 
+                                        : "border-gray-200"
+                                }`}
+                            >
+                                <div className="w-6 h-6 bg-gray-400 rounded-full" />
+                                <span className="text-xs font-medium">Pill</span>
+                            </button>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Button Color
+                            </label>
+                            <div className="grid grid-cols-5 gap-2">
+                                {buttonColors.map((color, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => setProfile({ ...profile, buttonColor: color })}
+                                        style={{ backgroundColor: color }}
+                                        className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${
+                                            profile.buttonColor === color 
+                                                ? "border-indigo-600 ring-2 ring-indigo-200" 
+                                                : "border-gray-200"
+                                        }`}
+                                    />
+                                ))}
+                                {/* Custom Color Picker */}
+                                <label className="w-8 h-8 rounded-full border-2 border-gray-200 cursor-pointer flex items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors">
+                                    <Palette className="w-3 h-3 text-gray-600" />
+                                    <input
+                                        type="color"
+                                        className="hidden"
+                                        onChange={(e) =>
+                                            setProfile({ ...profile, buttonColor: e.target.value })
+                                        }
+                                    />
+                                </label>
+                            </div>
+                        </div>
+
+                        <button 
+                            onClick={handlePreviewNavigation} 
+                            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 hover:shadow-lg"
+                        >
+                            View Full Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
