@@ -7,6 +7,8 @@ import Customize from "./pages/Customize"
 import QrCode from "./pages/Qrcode"
 import Mylinks from "./pages/Mylinks"
 import Preview from "./pages/Preview"
+import SharedProfile from "./pages/SharedProfile"
+import { AuthProvider } from "./context/AuthContext"
 
 function LayoutWithSidebar({ children }) {
   return (
@@ -22,19 +24,20 @@ function LayoutWithSidebar({ children }) {
 function App() {
   return (
     <>
-     
+     <AuthProvider>
     <BrowserRouter>
     <Routes>
      <Route path="/" element={<LandingPage/>}/>
      <Route path="/Login" element={<Login/>}/>
      <Route path="/Signup" element={<Signup/>}/>
      <Route path="/Mylinks" element={<LayoutWithSidebar><Mylinks/></LayoutWithSidebar>}/>
-     <Route path="/Customize" element={<Customize/>}/>
+     <Route path="/Customize" element={<LayoutWithSidebar><Customize/></LayoutWithSidebar>}/>
      <Route path="/Qrcode" element={<LayoutWithSidebar><QrCode/></LayoutWithSidebar>}/>
       <Route path="/Preview" element={<Preview/>}/>
+      <Route path="/profile/:userId" element={<SharedProfile/>}/>
     </Routes>
     </BrowserRouter>
-
+    </AuthProvider>
     </>
   )
 }

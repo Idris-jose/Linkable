@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import pfp from "../assets/pfp.jpeg";
 import { Menu, X, Home, FileText, Layers,  Book,Link,Palette,QrCode } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const navItems = [
     { title: 'My Links', route: '/Mylinks', icon: <Link size={18} /> },
@@ -9,6 +10,7 @@ const navItems = [
 ];
 
 const Sidebar = () => {
+    const { user } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const [activeRoute, setActiveRoute] = useState(window.location.pathname);
 
@@ -41,8 +43,8 @@ const Sidebar = () => {
                   alt="Employer profile"
                    />
                     <div>
-                        <h1 className='font-medium'>Jhon Doe</h1>
-                        <p className='text-gray-600 text-sm'>@jhonDoe</p>
+                        <h1 className='font-medium'>{user?.displayName || 'User'}</h1>
+                        <p className='text-gray-600 text-sm'>@{user?.email?.split('@')[0] || 'user'}</p>
                     </div>
                 </div>
 

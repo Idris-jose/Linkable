@@ -1,12 +1,21 @@
 import { Mail, ArrowLeft, Eye, EyeOff, User, Lock, UserPlus, Check } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function Signup() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
     const navigate = useNavigate();
+    const { signInWithGoogle, signUpWithEmail } = useAuth();
+
     const handleSigninClick = () => {
          navigate('/Login');
     };
@@ -16,9 +25,36 @@ export default function Signup() {
        navigate(-1);
     };
 
-    const HandleCreateAccount = () => {
-        navigate('/Mylinks')
-    }
+    const handleGoogleSignUp = async () => {
+        setLoading(true);
+        setError('');
+        try {
+            await signInWithGoogle();
+            navigate('/Mylinks');
+        } catch (error) {
+            setError('Failed to sign up with Google. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEmailSignUp = async (e) => {
+        e.preventDefault();
+        if (password !== confirmPassword) {
+            setError('Passwords do not match.');
+            return;
+        }
+        setLoading(true);
+        setError('');
+        try {
+            await signUpWithEmail(email, password);
+            navigate('/Mylinks');
+        } catch (error) {
+            setError('Failed to create account. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -54,7 +90,9 @@ export default function Signup() {
 
                            <button
                             type="button"
-                            className="flex items-center justify-center gap-2 border px-6 py-2 w-full rounded border-gray-300 hover:bg-gray-100 transition"
+                            onClick={handleGoogleSignUp}
+                            disabled={loading}
+                            className="flex items-center justify-center gap-2 border px-6 py-2 w-full rounded border-gray-300 hover:bg-gray-100 transition disabled:opacity-50"
                         >
                             <img
                                 src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -86,6 +124,8 @@ export default function Signup() {
                                         className="border-2 border-gray-200 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50"
                                         type="text"
                                         id="fullName"
+                                        value={fullName}
+                                        onChange={(e) => setFullName(e.target.value)}
                                         required
                                         autoComplete="name"
                                         placeholder="Enter your full name"
@@ -104,12 +144,14 @@ export default function Signup() {
                                         className="border-2 border-gray-200 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50"
                                         type="email"
                                         id="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                         required
                                         autoComplete="email"
                                         placeholder="Enter your email address"
                                     />
                                 </div>
-                                
+
                                 <div>
                                     <label
                                         className="block text-gray-700 mb-2 font-medium text-sm"
@@ -123,6 +165,8 @@ export default function Signup() {
                                             className="border-2 border-gray-200 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50 pr-12"
                                             type={showPassword ? "text" : "password"}
                                             id="password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
                                             required
                                             autoComplete="new-password"
                                             placeholder="Create a strong password"
@@ -150,6 +194,8 @@ export default function Signup() {
                                             className="border-2 border-gray-200 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50 pr-12"
                                             type={showConfirmPassword ? "text" : "password"}
                                             id="confirmPassword"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
                                             required
                                             autoComplete="new-password"
                                             placeholder="Confirm your password"
@@ -165,15 +211,19 @@ export default function Signup() {
                                 </div>
 
                                
+                               
                             </div>
 
+                            {error && <p className="text-red-500 text-sm">{error}</p>}
+
                             <button
-                                className="w-full py-3 px-4 rounded flex items-center justify-center gap-2 font-medium transition-all duration-200 transform hover:-translate-y-0.5 bg-gradient-to-r from-blue-700 via-blue-600 to-purple-600 text-white hover:shadow-lg hover:shadow-blue-500/25"
+                                onClick={handleEmailSignUp}
+                                disabled={loading}
+                                className="w-full py-3 px-4 rounded flex items-center justify-center gap-2 font-medium transition-all duration-200 transform hover:-translate-y-0.5 bg-gradient-to-r from-blue-700 via-blue-600 to-purple-600 text-white hover:shadow-lg hover:shadow-blue-500/25 disabled:opacity-50"
                                 type="submit"
-                                onClick={HandleCreateAccount}
                             >
                                 <UserPlus className="w-5 h-5" />
-                                Create your account
+                                {loading ? 'Creating account...' : 'Create your account'}
                             </button>
 
                            <p className="text-blue-800 text-center mt-5 text-sm">

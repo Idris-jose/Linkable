@@ -1,8 +1,11 @@
 import { templates} from '../data/templates';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomizeSidebar from "../Navigation/CustomizeSidebar";
 import Preview from "./Preview";
 import { Link as LinkIcon } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { db } from "../firebase";
+import { doc, setDoc, getDoc, collection, getDocs } from "firebase/firestore";
 
 function LivePreview({ profile }) {
 const getButtonStyle = () => {
@@ -109,6 +112,7 @@ const getButtonStyle = () => {
 }
 
 export default function Customize() {
+  const { user } = useAuth();
   const [profile, setProfile] = useState({
     displayName: "John Doe",
     bio: "Digital creator, coffee lover, and tech enthusiast. Sharing my journey through life and work.",
@@ -118,13 +122,51 @@ export default function Customize() {
     buttonStyle: "rounded",
     buttonColor: "#000000",
     templateId: null,
-    links: [
-      { title: "Instagram", url: "https://instagram.com", active: true },
-      { title: "Twitter", url: "https://twitter.com", active: true },
-      { title: "YouTube", url: "https://youtube.com", active: true },
-      { title: "LinkedIn", url: "https://linkedin.com", active: false }
-    ]
+    links: []
   });
+
+  // Load profile and links from Firestore on component mount
+  useEffect(() => {
+    if (user) {
+      const loadProfile = async () => {
+        try {
+          const profileDoc = await getDoc(doc(db, "users", user.uid, "profile", "data"));
+          if (profileDoc.exists()) {
+            setProfile(prevProfile => ({ ...prevProfile, ...profileDoc.data() }));
+          }
+        } catch (error) {
+          console.error('Error loading profile:', error);
+        }
+      };
+
+      const loadLinks = async () => {
+        try {
+          const linksSnapshot = await getDocs(collection(db, "users", user.uid, "links"));
+          const linksData = linksSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setProfile(prevProfile => ({ ...prevProfile, links: linksData }));
+        } catch (error) {
+          console.error('Error loading links:', error);
+        }
+      };
+
+      loadProfile();
+      loadLinks();
+    }
+  }, [user]);
+
+  // Save profile to Firestore whenever it changes
+  useEffect(() => {
+    if (user) {
+      const saveProfile = async () => {
+        try {
+          await setDoc(doc(db, "users", user.uid, "profile", "data"), profile);
+        } catch (error) {
+          console.error('Error saving profile:', error);
+        }
+      };
+      saveProfile();
+    }
+  }, [profile, user]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -148,7 +190,7 @@ export default function Customize() {
             </div>
           </div>
 
-         
+
         </div>
       </div>
     </div>

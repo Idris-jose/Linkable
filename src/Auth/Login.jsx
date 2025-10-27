@@ -1,13 +1,45 @@
 import { Mail, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-
-
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Login(){
-    const navigate =useNavigate()
+    const navigate = useNavigate();
+    const { signInWithGoogle, signInWithEmail } = useAuth();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
     const handleSignupClick = () => {
         navigate('/signup');
+    };
+
+    const handleGoogleSignIn = async () => {
+        setLoading(true);
+        setError('');
+        try {
+            await signInWithGoogle();
+            navigate('/Mylinks');
+        } catch (error) {
+            setError('Failed to sign in with Google. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEmailSignIn = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+        try {
+            await signInWithEmail(email, password);
+            navigate('/Mylinks');
+        } catch (error) {
+            setError('Invalid email or password. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -30,7 +62,9 @@ export default function Login(){
 
                         <button
                             type="button"
-                            className="flex items-center justify-center gap-2 border px-6 py-2 w-full rounded border-gray-300 hover:bg-gray-100 transition"
+                            onClick={handleGoogleSignIn}
+                            disabled={loading}
+                            className="flex items-center justify-center gap-2 border px-6 py-2 w-full rounded border-gray-300 hover:bg-gray-100 transition disabled:opacity-50"
                         >
                             <img
                                 src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -61,6 +95,8 @@ export default function Login(){
                                 className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 type="email"
                                 id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 required
                                 autoComplete="email"
                                 placeholder="Enter your email"
@@ -77,17 +113,22 @@ export default function Login(){
                                 className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 type="password"
                                 id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 required
                                 autoComplete="current-password"
                                 placeholder="Enter your password"
                             />
                         </div>
+                        {error && <p className="text-red-500 text-sm">{error}</p>}
                         <button
-                            className="bg-gradient-to-r from-blue-700 to-purple-500 text-white py-2 w-full px-4 rounded flex items-center justify-center gap-2 font-semibold hover:opacity-90 transition"
+                            onClick={handleEmailSignIn}
+                            disabled={loading}
+                            className="bg-gradient-to-r from-blue-700 to-purple-500 text-white py-2 w-full px-4 rounded flex items-center justify-center gap-2 font-semibold hover:opacity-90 transition disabled:opacity-50"
                             type="submit"
                         >
                             <Mail className="w-4 h-4" />
-                            Sign in
+                            {loading ? 'Signing in...' : 'Sign in'}
                         </button>
 
                         <p className="text-blue-800 text-center mt-5 text-sm">

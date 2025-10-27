@@ -1,55 +1,70 @@
 import { Plus, Edit, Trash2 } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import AddLink from "../modals/AddLink"
+import { useAuth } from "../context/AuthContext"
+import { db } from "../firebase"
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "firebase/firestore"
 
 
 export default function MyLinks() {
-    const [links, setLinks] = useState([
-        {
-            id: 1,
-            title: 'Instagram',
-            url: 'https://instagram.com/johndoe',
-            isActive: false,
-            status: 'Inactive'
-        },
-        {
-            id: 2,
-            title: 'Twitter',
-            url: 'https://twitter.com/johndoe',
-            isActive: true,
-            status: 'Active'
-        },
-        {
-            id: 3,
-            title: 'YouTube Channel',
-            url: 'https://youtube.com/johndoe',
-            isActive: true,
-            status: 'Active'
-        },
-        {
-            id: 4,
-            title: 'LinkedIn',
-            url: 'https://linkedin.com/in/johndoe',
-            isActive: false,
-            status: 'Inactive'
-        }
-    ])
-
+    const { user } = useAuth()
+    const [links, setLinks] = useState([])
     const [showAddLinkModal, setShowAddLinkModal] = useState(false);
 
-    const addNewLink = (newLink) => {
-    setLinks([...links, newLink]);
-  };
+    useEffect(() => {
+        if (user) {
+            fetchLinks()
+        }
+    }, [user])
 
+    const fetchLinks = async () => {
+        try {
+            const linksSnapshot = await getDocs(collection(db, "users", user.uid, "links"))
+            const linksData = linksSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+            setLinks(linksData)
+        } catch (error) {
+            console.error("Error fetching links:", error)
+        }
+    }
 
-   const toggleLink =(id) => {
-    setLinks(links.map(link =>
-        link.id === id ? {...link, isActive: !link.isActive , status:link.isActive? 'Active' : 'inactive' } : link
-     ))
-   }
+    const addNewLink = async (newLink) => {
+        try {
+            await addDoc(collection(db, "users", user.uid, "links"), {
+                title: newLink.title,
+                url: newLink.url,
+                active: false,
+                status: "Inactive"
+            })
+            fetchLinks()
+        } catch (error) {
+            console.error("Error adding link:", error)
+        }
+    };
 
-    const totalLinks = links.length
-    const activeLinks = links.filter(link => link.isActive).length
+    const toggleLink = async (id) => {
+        try {
+            const link = links.find(l => l.id === id)
+            await updateDoc(doc(db, "users", user.uid, "links", id), {
+                active: !link.active,
+                status: !link.active ? 'Active' : 'Inactive'
+            })
+            fetchLinks()
+        } catch (error) {
+            console.error("Error toggling link:", error)
+        }
+    }
+
+    const deleteLink = async (id) => {
+        try {
+            await deleteDoc(doc(db, "users", user.uid, "links", id))
+            fetchLinks()
+        } catch (error) {
+            console.error("Error deleting link:", error)
+        }
+    }
+
+   const totalLinks = links.length
+    const activeLinks = links.filter(link => link.active).length
     const inactiveLinks = totalLinks - activeLinks
 
     const linkStats = [
@@ -66,7 +81,7 @@ export default function MyLinks() {
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">My Links</h1>
                     <p className="text-gray-600">Manage and organize your links</p>
                 </div>
-                <button 
+                <button
                 onClick={() => setShowAddLinkModal(true)}
                 className="bg-gradient-to-r from-blue-700 to-purple-500 via-blue-700 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
                     <Plus size={20} />
@@ -113,8 +128,8 @@ export default function MyLinks() {
                                     <div className="flex items-center gap-3">
                                         <h3 className="font-medium text-gray-900">{link.title}</h3>
                                         <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                                            link.isActive 
-                                                ? 'bg-green-100 text-green-700' 
+                                            link.active
+                                                ? 'bg-green-100 text-green-700'
                                                 : 'bg-gray-100 text-gray-600'
                                         }`}>
                                             {link.status}
@@ -130,15 +145,15 @@ export default function MyLinks() {
                                 <label className="relative inline-flex items-center cursor-pointer">
                                     <input
                                         type="checkbox"
-                                        checked={link.isActive}
+                                        checked={link.active}
                                         onChange={() => toggleLink(link.id)}
                                         className="sr-only peer"
                                     />
                                     <div className={`relative w-11 h-6 rounded-full transition-colors duration-200 ease-in-out ${
-                                        link.isActive ? 'bg-black' : 'bg-gray-300'
+                                        link.active ? 'bg-black' : 'bg-gray-300'
                                     }`}>
                                         <div className={`absolute top-0.5 left-0.5 bg-white border border-gray-300 rounded-full h-5 w-5 transition-transform duration-200 ease-in-out ${
-                                            link.isActive ? 'translate-x-5 ' : 'translate-x-0'
+                                            link.active ? 'translate-x-5 ' : 'translate-x-0'
                                         }`}></div>
                                     </div>
                                 </label>
@@ -149,7 +164,10 @@ export default function MyLinks() {
                                 </button>
 
                                 {/* Delete Button */}
-                                <button className="p-2  text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                <button
+                                    onClick={() => deleteLink(link.id)}
+                                    className="p-2  text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                >
                                     <Trash2 size={16} />
                                 </button>
                             </div>
