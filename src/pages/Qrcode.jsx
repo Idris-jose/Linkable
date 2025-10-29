@@ -1,42 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef,useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
-import { Download, Share2, Copy, RefreshCw } from 'lucide-react';
+import { Download, Share2, Copy } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
-import html2canvas from 'html2canvas';
 import { useAuth } from '../context/AuthContext';
+import * as htmlToImage from "html-to-image";
 
 export default function QrCode() {
     const { user } = useAuth();
     const [profile, setProfile] = useState(null);
     const [qrValue, setQrValue] = useState('');
 
+    const nodeRef = useRef(null);
+
+
     useEffect(() => {
         if (user) {
-            // Generate QR code URL for the user's profile
             const profileUrl = `${window.location.origin}/profile/${user.uid}`;
             setQrValue(profileUrl);
         }
     }, [user]);
 
-    const handleDownload = async () => {
-        try {
-            const qrElement = document.getElementById("qr-code");
-            const canvas = await html2canvas(qrElement, {
-                backgroundColor: '#ffffff',
-                scale: 2,
-                useCORS: true,
-            });
+    async function handleDownload () {
+         if (!nodeRef.current) return;
+    const dataUrl = await htmlToImage.toPng(nodeRef.current, {
+      pixelRatio: 2,
+      cacheBust: true,
+      filter: (node) =>
+        !(node instanceof HTMLElement && node.dataset?.export === "exclude"),
+      backgroundColor: "#0b0b0b",
+    });
 
-            const link = document.createElement('a');
-            link.download = 'linkable-qr-code.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-
-            toast.success('QR Code downloaded successfully!');
-        } catch (error) {
-            console.error('Error downloading QR code:', error);
-            toast.error('Failed to download QR code');
-        }
+    const link = document.createElement("a");
+    link.download = "export.png";
+    link.href = dataUrl;
+    link.click();
     };
 
     const handleShare = async () => {
@@ -95,13 +92,12 @@ export default function QrCode() {
                         <p className="text-gray-600 text-center mb-8">Share your profile with anyone by scanning this QR code</p>
 
                         <div className="flex justify-center mb-8">
-                            <div className="bg-white p-4 rounded-lg shadow-md border">
+                            <div className="bg-white p-4 rounded-lg shadow-md border" ref={nodeRef}>
                                 <QRCode
-                                    id="qr-code"
                                     value={qrValue}
                                     size={256}
+                                    renderAs="canvas"
                                     style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                                    viewBox={`0 0 256 256`}
                                 />
                             </div>
                         </div>

@@ -154,19 +154,7 @@ export default function Customize() {
     }
   }, [user]);
 
-  // Save profile to Firestore whenever it changes
-  useEffect(() => {
-    if (user) {
-      const saveProfile = async () => {
-        try {
-          await setDoc(doc(db, "users", user.uid, "profile", "data"), profile);
-        } catch (error) {
-          console.error('Error saving profile:', error);
-        }
-      };
-      saveProfile();
-    }
-  }, [profile, user]);
+  // Removed auto-save functionality
 
   return (
     <div className="min-h-screen bg-gray-50 flex">

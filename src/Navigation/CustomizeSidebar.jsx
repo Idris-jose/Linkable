@@ -1,9 +1,29 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Palette, Type, User, Upload } from "lucide-react";
+import { ArrowLeft, Palette, Type, User, Upload, Save } from "lucide-react";
 import { templates } from "../data/templates";
+import { useAuth } from "../context/AuthContext";
+import { db } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function CustomizeSidebar({ profile, setProfile }) {
     const navigate = useNavigate();
+    const { user } = useAuth();
+
+    const handleSaveCustomization = async () => {
+        if (!user) {
+            toast.error('You must be logged in to save customizations');
+            return;
+        }
+
+        try {
+            await setDoc(doc(db, "users", user.uid, "profile", "data"), profile);
+            toast.success('Customization saved successfully!');
+        } catch (error) {
+            console.error('Error saving profile:', error);
+            toast.error('Failed to save customization');
+        }
+    };
 
     const backgroundOptions = [
         { id: 'gradient', name: 'Gradient', value: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
@@ -42,21 +62,23 @@ export default function CustomizeSidebar({ profile, setProfile }) {
     };
 
     return (
-        <div className="w-96 bg-white shadow-lg border-r border-gray-200 overflow-y-auto">
-            {/* Header */}
-            <div className="p-6 border-b border-gray-200">
-                <button 
-                    className="text-sm gap-3 flex items-center cursor-pointer hover:text-indigo-600 transition-colors mb-4"
-                    onClick={() => navigate('/Mylinks')}
-                >
-                    <ArrowLeft className="w-4 h-4"/> Back to Dashboard
-                </button>
-                
-                <h1 className="font-bold text-2xl text-gray-900 mb-1">Customize Profile</h1>
-                <p className="text-gray-600">Personalize your link hub</p>
-            </div>
+        <>
+            <Toaster position="top-right" />
+            <div className="w-96 bg-white shadow-lg border-r border-gray-200 overflow-y-auto">
+                {/* Header */}
+                <div className="p-6 border-b border-gray-200">
+                    <button
+                        className="text-sm gap-3 flex items-center cursor-pointer hover:text-indigo-600 transition-colors mb-4"
+                        onClick={() => navigate('/Mylinks')}
+                    >
+                        <ArrowLeft className="w-4 h-4"/> Back to Dashboard
+                    </button>
 
-            <div className="p-6 space-y-6">
+                    <h1 className="font-bold text-2xl text-gray-900 mb-1">Customize Profile</h1>
+                    <p className="text-gray-600">Personalize your link hub</p>
+                </div>
+
+                <div className="p-6 space-y-6">
                 {/* Profile Information Card */}
                 <div className="border border-gray-200 rounded-lg shadow-sm">
                     <div className="p-4 border-b border-gray-100">
@@ -315,8 +337,16 @@ export default function CustomizeSidebar({ profile, setProfile }) {
                             </div>
                         </div>
 
-                        <button 
-                            onClick={handlePreviewNavigation} 
+                        <button
+                            onClick={handleSaveCustomization}
+                            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 hover:shadow-lg flex items-center justify-center gap-2 mb-3"
+                        >
+                            <Save className="w-5 h-5" />
+                            Save Customization
+                        </button>
+
+                        <button
+                            onClick={handlePreviewNavigation}
                             className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 hover:shadow-lg"
                         >
                             View Full Preview
@@ -325,5 +355,6 @@ export default function CustomizeSidebar({ profile, setProfile }) {
                 </div>
             </div>
         </div>
+        </>
     );
 }

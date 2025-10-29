@@ -1,0 +1,5 @@
+- [ ] Remove auto-save functionality from Customize.jsx
+- [ ] Add "Save Customization" button to CustomizeSidebar.jsx
+- [ ] Implement save function to save profile to Firestore
+- [ ] Modify Preview.jsx to load profile from DB if no state is passed
+- [ ] Test that saved customizations reflect in QR code shared profile
