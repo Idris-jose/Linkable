@@ -12,7 +12,7 @@ export const templates = [
     id: "glassmorphism",
     name: "Glassmorphism",
     background:
-      "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
+      "linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 100%), linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
     font: "Inter, sans-serif",
     buttonStyle: "pill",
     buttonColor: "rgba(255,255,255,0.2)",

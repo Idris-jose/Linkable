@@ -33,32 +33,51 @@ const getButtonStyle = () => {
 
   const getBackgroundStyle = () => {
     if (!profile.background) return { backgroundColor: '#000000' };
-    
+
     return profile.background.startsWith("linear-gradient")
       ? { background: profile.background }
       : { backgroundColor: profile.background };
   };
 
   const getFontFamily = () => {
-    return profile.font === "Poppins" || profile.font === "font-poppins" 
-      ? "Poppins, sans-serif" 
+    return profile.font === "Poppins" || profile.font === "font-poppins"
+      ? "Poppins, sans-serif"
       : "Inter, sans-serif";
   };
 
   const activeLinks = profile.links ? profile.links.filter(link => link.active) : [];
 
   return (
-    <div 
-      className="h-full rounded-2xl p-6 overflow-y-auto"
+    <div
+      className="h-full rounded-2xl p-6 overflow-y-auto relative"
       style={getBackgroundStyle()}
     >
+      {/* Stickers Overlay */}
+      {profile.stickers && profile.stickers.map((sticker) => (
+        <img
+          key={sticker.id}
+          src={sticker.src}
+          alt={sticker.name}
+          className="absolute object-contain"
+          style={{
+            left: sticker.x || 0,
+            top: sticker.y || 0,
+            width: sticker.width || 60,
+            height: sticker.height || 60,
+            transform: `rotate(${sticker.rotation || 0}deg)`,
+            zIndex: sticker.zIndex || 1,
+            pointerEvents: 'none'
+          }}
+        />
+      ))}
+
       <div className="text-center mb-8">
         {/* Profile Picture */}
         <div className="w-24 h-24 mx-auto mb-4 rounded-full border-4 border-white/20 overflow-hidden bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
           {profile.profilePicture ? (
-            <img 
-              src={profile.profilePicture} 
-              alt={profile.displayName || 'Profile'} 
+            <img
+              src={profile.profilePicture}
+              alt={profile.displayName || 'Profile'}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -67,16 +86,16 @@ const getButtonStyle = () => {
             </span>
           )}
         </div>
-        
-        <h1 
+
+        <h1
           className="text-white text-xl font-bold mb-2"
           style={{ fontFamily: getFontFamily() }}
         >
           {profile.displayName || 'Your Name'}
         </h1>
-        
+
         {profile.bio && (
-          <p 
+          <p
             className="text-white/80 text-sm leading-relaxed"
             style={{ fontFamily: getFontFamily() }}
           >
@@ -96,7 +115,7 @@ const getButtonStyle = () => {
             <div
               key={i}
               className={getButtonStyle()}
-              style={{ 
+              style={{
                 backgroundColor: profile.buttonColor,
                 color: profile.buttonColor === "#ffffff" ? "#000000" : "#ffffff",
                 fontFamily: getFontFamily()
@@ -122,7 +141,8 @@ export default function Customize() {
     buttonStyle: "rounded",
     buttonColor: "#000000",
     templateId: null,
-    links: []
+    links: [],
+    stickers: []
   });
 
   // Load profile and links from Firestore on component mount

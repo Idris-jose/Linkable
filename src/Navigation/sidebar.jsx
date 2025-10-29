@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 const navItems = [
     { title: 'My Links', route: '/Mylinks', icon: <Link size={18} /> },
     { title: 'Customize', route: '/Customize', icon: <Palette size={18} />  },
+    { title: 'Stickers', route: '/Stickers', icon: <Layers size={18} /> },
     { title: 'QR Code', route: '/Qrcode', icon: <QrCode size={18} /> },
 ];
 
@@ -63,7 +64,7 @@ const Sidebar = () => {
                                 {item.icon}
                                 <span className="ml-2 font-medium text-sm">{item.title}</span>
                             </div>
-                            
+
                         </a>
                     ))}
                 </nav>

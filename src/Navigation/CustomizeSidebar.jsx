@@ -39,7 +39,7 @@ export default function CustomizeSidebar({ profile, setProfile }) {
     ];
 
     const buttonColors = [
-        '#000000', '#ffffff', '#ef4444', '#f97316', '#eab308', 
+        '#000000', '#ffffff', '#ef4444', '#f97316', '#eab308',
         '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899'
     ];
 
@@ -125,9 +125,9 @@ export default function CustomizeSidebar({ profile, setProfile }) {
                             <div className="flex items-center space-x-3">
                                 <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold overflow-hidden">
                                     {profile.profilePicture ? (
-                                        <img 
-                                            src={profile.profilePicture} 
-                                            alt="Profile" 
+                                        <img
+                                            src={profile.profilePicture}
+                                            alt="Profile"
                                             className="w-full h-full object-cover"
                                         />
                                     ) : (
@@ -163,13 +163,13 @@ export default function CustomizeSidebar({ profile, setProfile }) {
                                 <button
                                     key={bg.id}
                                     onClick={() => setProfile({ ...profile, background: bg.value })}
-                                    style={bg.value.startsWith('linear-gradient') 
+                                    style={bg.value.startsWith('linear-gradient')
                                         ? { background: bg.value }
                                         : { backgroundColor: bg.value }
                                     }
                                     className={`w-12 h-12 rounded-lg border-2 transition-all hover:scale-105 ${
-                                        profile.background === bg.value 
-                                            ? "border-indigo-600 ring-2 ring-indigo-200" 
+                                        profile.background === bg.value
+                                            ? "border-indigo-600 ring-2 ring-indigo-200"
                                             : "border-gray-200 hover:border-gray-300"
                                     }`}
                                     title={bg.name}
@@ -189,7 +189,7 @@ export default function CustomizeSidebar({ profile, setProfile }) {
                         </div>
                     </div>
                 </div>
-                   
+
                    {/* Template Presets */}
 <div className="border border-gray-200 rounded-lg shadow-sm">
   <div className="p-4 border-b border-gray-100">
@@ -206,6 +206,7 @@ export default function CustomizeSidebar({ profile, setProfile }) {
             background: t.background,
             buttonStyle: t.buttonStyle,
             buttonColor: t.buttonColor,
+            font: t.font,
           })
         }
         className={`p-3 rounded-lg border-2 transition-all ${
@@ -272,8 +273,8 @@ export default function CustomizeSidebar({ profile, setProfile }) {
                             <button
                                 onClick={() => setProfile({ ...profile, buttonStyle: "rounded" })}
                                 className={`p-3 border-2 rounded-lg flex flex-col items-center space-y-1 transition-all hover:bg-gray-50 ${
-                                    profile.buttonStyle === "rounded" 
-                                        ? "border-indigo-600 bg-indigo-50" 
+                                    profile.buttonStyle === "rounded"
+                                        ? "border-indigo-600 bg-indigo-50"
                                         : "border-gray-200"
                                 }`}
                             >
@@ -284,8 +285,8 @@ export default function CustomizeSidebar({ profile, setProfile }) {
                             <button
                                 onClick={() => setProfile({ ...profile, buttonStyle: "square" })}
                                 className={`p-3 border-2 rounded-lg flex flex-col items-center space-y-1 transition-all hover:bg-gray-50 ${
-                                    profile.buttonStyle === "square" 
-                                        ? "border-indigo-600 bg-indigo-50" 
+                                    profile.buttonStyle === "square"
+                                        ? "border-indigo-600 bg-indigo-50"
                                         : "border-gray-200"
                                 }`}
                             >
@@ -296,8 +297,8 @@ export default function CustomizeSidebar({ profile, setProfile }) {
                             <button
                                 onClick={() => setProfile({ ...profile, buttonStyle: "pill" })}
                                 className={`p-3 border-2 rounded-lg flex flex-col items-center space-y-1 transition-all hover:bg-gray-50 ${
-                                    profile.buttonStyle === "pill" 
-                                        ? "border-indigo-600 bg-indigo-50" 
+                                    profile.buttonStyle === "pill"
+                                        ? "border-indigo-600 bg-indigo-50"
                                         : "border-gray-200"
                                 }`}
                             >
@@ -317,8 +318,8 @@ export default function CustomizeSidebar({ profile, setProfile }) {
                                         onClick={() => setProfile({ ...profile, buttonColor: color })}
                                         style={{ backgroundColor: color }}
                                         className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${
-                                            profile.buttonColor === color 
-                                                ? "border-indigo-600 ring-2 ring-indigo-200" 
+                                            profile.buttonColor === color
+                                                ? "border-indigo-600 ring-2 ring-indigo-200"
                                                 : "border-gray-200"
                                         }`}
                                     />
@@ -343,6 +344,13 @@ export default function CustomizeSidebar({ profile, setProfile }) {
                         >
                             <Save className="w-5 h-5" />
                             Save Customization
+                        </button>
+
+                        <button
+                            onClick={() => navigate('/Stickers')}
+                            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 hover:shadow-lg mb-3"
+                        >
+                            Manage Stickers
                         </button>
 
                         <button

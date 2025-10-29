@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { templates } from "../data/templates";
 import { useLocation,useNavigate } from "react-router-dom";
-import { 
-  ExternalLink, 
-  Instagram, 
-  Twitter, 
-  Youtube, 
-  Mail, 
-  Phone, 
-  Globe, 
+import {
+  ExternalLink,
+  Instagram,
+  Twitter,
+  Youtube,
+  Mail,
+  Phone,
+  Globe,
   Link as LinkIcon,
   Share,
   Heart,
@@ -90,15 +90,15 @@ export default function Preview({ profile: propProfile }) {
 
   const getBackgroundStyle = () => {
     if (!profile.background) return { backgroundColor: '#000000' };
-    
+
     return profile.background.startsWith("linear-gradient")
       ? { background: profile.background }
       : { backgroundColor: profile.background };
   };
 
   const getFontFamily = () => {
-    return profile.font === "Poppins" || profile.font === "font-poppins" 
-      ? "Poppins, sans-serif" 
+    return profile.font === "Poppins" || profile.font === "font-poppins"
+      ? "Poppins, sans-serif"
       : "Inter, sans-serif";
   };
 
@@ -106,7 +106,7 @@ export default function Preview({ profile: propProfile }) {
 
   const handleShare = async () => {
     const profileUrl = `https://linkbuilder.app/${profile.displayName?.replace(/\s+/g, '').toLowerCase()}`;
-    
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -129,15 +129,33 @@ export default function Preview({ profile: propProfile }) {
   };
 
   return (
-    <div className="min-h-screen" style={getBackgroundStyle()}>
+    <div className="min-h-screen relative" style={getBackgroundStyle()}>
+      {/* Stickers Overlay */}
+      {profile.stickers && profile.stickers.map((sticker) => (
+        <img
+          key={sticker.id}
+          src={sticker.src}
+          alt={sticker.name}
+          className="absolute object-contain"
+          style={{
+            left: `${(sticker.x / 320) * 100}%`, // Scale from phone mockup to full screen
+            top: `${(sticker.y / 640) * 100}%`,
+            width: `${(sticker.width / 320) * 100}%`,
+            height: `${(sticker.height / 640) * 100}%`,
+            transform: `rotate(${sticker.rotation || 0}deg)`,
+            zIndex: sticker.zIndex || 1,
+            pointerEvents: 'none'
+          }}
+        />
+      ))}
 
-      <button 
+      <button
                     className="text-sm gap-3 flex items-center cursor-pointer text-white bg-white/50 p-3 rounded  hover:text-black transition-colors mb-4"
                     onClick={() => navigate('/Customize')}
                 >
                     <ArrowLeft className="w-4 h-4"/> Back to Dashboard
                 </button>
-      
+
       {/* Profile Content */}
       <div className="relative min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md mx-auto">
@@ -146,9 +164,9 @@ export default function Preview({ profile: propProfile }) {
             {/* Profile Picture */}
             <div className="w-32 h-32 mx-auto mb-6 rounded-full border-4 border-white/30 shadow-2xl overflow-hidden flex items-center justify-center">
               {profile.profilePicture ? (
-                <img 
-                  src={profile.profilePicture} 
-                  alt={profile.displayName || 'Profile'} 
+                <img
+                  src={profile.profilePicture}
+                  alt={profile.displayName || 'Profile'}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -157,20 +175,20 @@ export default function Preview({ profile: propProfile }) {
                 </span>
               )}
             </div>
-            
-            <h1 
+
+            <h1
               className="text-white text-3xl font-bold mb-3 drop-shadow-lg"
               style={{ fontFamily: getFontFamily() }}
             >
               {profile.displayName || 'Your Name'}
             </h1>
-            
+
             <p className="text-white/90 text-lg mb-2">
               @{profile.displayName?.replace(/\s+/g, '').toLowerCase() || 'username'}
             </p>
-            
+
             {profile.bio && (
-              <p 
+              <p
                 className="text-white/80 text-base leading-relaxed max-w-sm mx-auto drop-shadow-sm"
                 style={{ fontFamily: getFontFamily() }}
               >
@@ -195,7 +213,7 @@ export default function Preview({ profile: propProfile }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={getButtonStyle()}
-                  style={{ 
+                  style={{
                     backgroundColor: `${profile.buttonColor}e6`, // Add transparency
                     color: profile.buttonColor === "#ffffff" ? "#000000" : "#ffffff",
                     fontFamily: getFontFamily(),
@@ -218,14 +236,14 @@ export default function Preview({ profile: propProfile }) {
           {/* Footer */}
           <div className="text-center">
             <div className="flex items-center justify-center space-x-6 mb-6">
-              <button 
+              <button
                 onClick={handleShare}
                 className="text-white/60 hover:text-white/80 transition-colors"
               >
                 <Share className="w-6 h-6" />
               </button>
             </div>
-            
+
             <div className="flex items-center justify-center space-x-2 text-white/40 text-sm">
               <div className="flex items-center space-x-1">
                 <div className="w-4 h-4 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-sm flex items-center justify-center">
