@@ -259,6 +259,22 @@ export default function CustomizeSidebar({ profile, setProfile }) {
                                 />
                                 <span className="text-sm font-medium text-gray-700" style={{fontFamily: 'Poppins'}}>Poppins</span>
                             </label>
+                           <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input
+                                type="radio"
+                                name="fontFamily"
+                                value="Zalando Sans Expanded"
+                                checked={profile.font === 'Zalando Sans Expanded'}
+                                onChange={() => setProfile({ ...profile, font: 'Zalando Sans Expanded' })}
+                                className="text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span
+                                className="text-sm font-medium text-gray-700"
+                                style={{ fontFamily: 'Zalando Sans Expanded' }}
+                            >
+                                Zalando Sans Expanded
+                            </span>
+                            </label>
                         </div>
                     </div>
                 </div>

@@ -80,7 +80,7 @@ export default function Signup() {
                         <div className="p-10 space-y-6">
                             <div className="text-center space-y-2">
                                
-                                <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-700 to-purple-600 bg-clip-text text-transparent">
+                                <h2 className="text-3xl font-bold bg-blue-700 bg-clip-text text-transparent">
                                     Join Linkable
                                 </h2>
                                 <p className="text-gray-600 text-sm leading-relaxed">
@@ -219,7 +219,7 @@ export default function Signup() {
                             <button
                                 onClick={handleEmailSignUp}
                                 disabled={loading}
-                                className="w-full py-3 px-4 rounded flex items-center justify-center gap-2 font-medium transition-all duration-200 transform hover:-translate-y-0.5 bg-gradient-to-r from-blue-700 via-blue-600 to-purple-600 text-white hover:shadow-lg hover:shadow-blue-500/25 disabled:opacity-50"
+                                className="w-full py-3 px-4 rounded flex items-center justify-center gap-2 font-medium transition-all duration-200 transform hover:-translate-y-0.5 bg-blue-700 text-white hover:shadow-lg hover:shadow-blue-500/25 disabled:opacity-50"
                                 type="submit"
                             >
                                 <UserPlus className="w-5 h-5" />

@@ -2,11 +2,14 @@ import { Plus, Edit, Trash2 } from "lucide-react"
 import { useState } from "react"
 import AddLink from "../modals/AddLink"
 import { useLinks } from "../hooks/useLinks"
+import EditLink from "../modals/EditLink"
 
 
 export default function MyLinks() {
-    const { links, addNewLink, toggleLink, deleteLink } = useLinks()
+    const { links, addNewLink, toggleLink, deleteLink, UpdateLink } = useLinks()
     const [showAddLinkModal, setShowAddLinkModal] = useState(false);
+    const [showEditLinkModal, setShowEditLinkModal] = useState(false);
+    const [selectedLink, setSelectedLink] = useState(null);
 
    const totalLinks = links.length
     const activeLinks = links.filter(link => link.active).length
@@ -18,6 +21,11 @@ export default function MyLinks() {
         { title: 'Inactive', number: inactiveLinks, color: 'text-gray-500' }
     ]
 
+    const handleEditClick = (link) => {
+    setSelectedLink(link);
+    setShowEditLinkModal(true);
+  };
+
     return (
         <div className="min-h-screen bg-gray-50 px-40 py-6">
             {/* Header */}
@@ -28,13 +36,22 @@ export default function MyLinks() {
                 </div>
                 <button
                 onClick={() => setShowAddLinkModal(true)}
-                className="bg-gradient-to-r from-blue-700 to-purple-500 via-blue-700 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
                     <Plus size={20} />
                     Add Link
                 </button>
             </div>
 
             {showAddLinkModal && <AddLink onAdd={addNewLink} onCancel={() => setShowAddLinkModal(false)} />}
+
+
+            {showEditLinkModal && selectedLink && (
+            <EditLink
+            link={selectedLink}
+            onEdit={UpdateLink}
+            onCancel={() => setShowEditLinkModal(false)}
+            />
+            )}
 
             {/* Stats Cards */}
             <div className="grid grid-cols-3 gap-6 mb-8">
@@ -104,7 +121,9 @@ export default function MyLinks() {
                                 </label>
 
                                 {/* Edit Button */}
-                                <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                                <button
+                                onClick={() => handleEditClick(link)}
+                                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
                                     <Edit size={16} />
                                 </button>
 

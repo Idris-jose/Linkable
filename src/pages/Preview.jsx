@@ -11,6 +11,8 @@ import {
   Globe,
   Link as LinkIcon,
   Share,
+  Github,
+  Linkedin,
   Heart,
   MessageCircle,
   ArrowLeft
@@ -85,6 +87,8 @@ export default function Preview({ profile: propProfile }) {
     if (domain.includes("youtube")) return <Youtube className="w-5 h-5" />;
     if (domain.includes("mailto:")) return <Mail className="w-5 h-5" />;
     if (domain.includes("tel:")) return <Phone className="w-5 h-5" />;
+    if (domain.includes("github")) return <Github className="w-5 h-5" />;
+    if (domain.includes("linkedin")) return <Linkedin className="w-5 h-5" />;
     return <Globe className="w-5 h-5" />;
   };
 
@@ -97,10 +101,12 @@ export default function Preview({ profile: propProfile }) {
   };
 
   const getFontFamily = () => {
-    return profile.font === "Poppins" || profile.font === "font-poppins"
-      ? "Poppins, sans-serif"
-      : "Inter, sans-serif";
-  };
+  if (profile.font === "Poppins" || profile.font === "font-poppins")
+    return "Poppins, sans-serif";
+  if (profile.font === "Zalando Sans Expanded" || profile.font === "font-zalando")
+    return "Zalando Sans Expanded, sans-serif";
+  return "Inter, sans-serif";
+};
 
   const activeLinks = profile.links ? profile.links.filter(link => link.active) : [];
 
@@ -162,7 +168,7 @@ export default function Preview({ profile: propProfile }) {
           {/* Profile Header */}
           <div className="text-center mb-8">
             {/* Profile Picture */}
-            <div className="w-32 h-32 mx-auto mb-6 rounded-full border-4 border-white/30 shadow-2xl overflow-hidden flex items-center justify-center">
+            <div className="w-32 h-32 mx-auto mb-6 rounded-full border-4 border-white shadow-2xl overflow-hidden flex items-center justify-center">
               {profile.profilePicture ? (
                 <img
                   src={profile.profilePicture}
@@ -214,7 +220,7 @@ export default function Preview({ profile: propProfile }) {
                   rel="noopener noreferrer"
                   className={getButtonStyle()}
                   style={{
-                    backgroundColor: `${profile.buttonColor}e6`, // Add transparency
+                    backgroundColor: `${profile.buttonColor}e6`, 
                     color: profile.buttonColor === "#ffffff" ? "#000000" : "#ffffff",
                     fontFamily: getFontFamily(),
                     backdropFilter: 'blur(10px)',

@@ -124,7 +124,7 @@ export default function Login(){
                         <button
                             onClick={handleEmailSignIn}
                             disabled={loading}
-                            className="bg-gradient-to-r from-blue-700 to-purple-500 text-white py-2 w-full px-4 rounded flex items-center justify-center gap-2 font-semibold hover:opacity-90 transition disabled:opacity-50"
+                            className="bg-blue-700  text-white py-2 w-full px-4 rounded flex items-center justify-center gap-2 font-semibold hover:opacity-90 transition disabled:opacity-50"
                             type="submit"
                         >
                             <Mail className="w-4 h-4" />

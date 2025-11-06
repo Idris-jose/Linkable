@@ -13,8 +13,12 @@ import {
   Globe,
   Link as LinkIcon,
   Share,
+  Github,
+  Linkedin,
+  Heart,
+  MessageCircle,
+  ArrowLeft
 } from "lucide-react";
-
 export default function SharedProfile() {
   const { userId } = useParams();
   const [profile, setProfile] = useState(null);
@@ -88,7 +92,7 @@ export default function SharedProfile() {
     }
   };
 
-  const getLinkIcon = (url) => {
+ const getLinkIcon = (url) => {
     const domain = url.toLowerCase();
     if (domain.includes("instagram")) return <Instagram className="w-5 h-5" />;
     if (domain.includes("twitter") || domain.includes("x.com"))
@@ -96,9 +100,11 @@ export default function SharedProfile() {
     if (domain.includes("youtube")) return <Youtube className="w-5 h-5" />;
     if (domain.includes("mailto:")) return <Mail className="w-5 h-5" />;
     if (domain.includes("tel:")) return <Phone className="w-5 h-5" />;
+    if (domain.includes("github")) return <Github className="w-5 h-5" />;
+    if (domain.includes("linkedin")) return <Linkedin className="w-5 h-5" />;
     return <Globe className="w-5 h-5" />;
   };
-
+  
   const getBackgroundStyle = () => {
     if (!profile.background) return { backgroundColor: '#000000' };
 
@@ -108,10 +114,12 @@ export default function SharedProfile() {
   };
 
   const getFontFamily = () => {
-    return profile.font === "Poppins" || profile.font === "font-poppins"
-      ? "Poppins, sans-serif"
-      : "Inter, sans-serif";
-  };
+  if (profile.font === "Poppins" || profile.font === "font-poppins")
+    return "Poppins, sans-serif";
+  if (profile.font === "Zalando Sans Expanded" || profile.font === "font-zalando")
+    return "Zalando Sans Expanded, sans-serif";
+  return "Inter, sans-serif";
+};
 
   const handleShare = async () => {
     const profileUrl = `${window.location.origin}/profile/${userId}`;
@@ -144,7 +152,7 @@ export default function SharedProfile() {
           {/* Profile Header */}
           <div className="text-center mb-8">
             {/* Profile Picture */}
-            <div className="w-32 h-32 mx-auto mb-6 rounded-full border-4 border-white/30 shadow-2xl overflow-hidden flex items-center justify-center">
+            <div className="w-32 h-32 mx-auto mb-6 rounded-full border-4 border-white shadow-2xl overflow-hidden flex items-center justify-center">
               {profile.profilePicture ? (
                 <img
                   src={profile.profilePicture}

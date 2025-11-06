@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useAuth } from "../context/AuthContext"
 import { db } from "../firebase"
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "firebase/firestore"
+import { link } from "framer-motion/client"
 
 export function useLinks() {
     const { user } = useAuth()
@@ -59,5 +60,18 @@ export function useLinks() {
         }
     }
 
-    return { links, addNewLink, toggleLink, deleteLink }
+    const UpdateLink = async (id, updatedLink) => {
+        try {
+            await updateDoc(doc(db, "users", user.uid, "links", id), {
+                title: updatedLink.title,
+                link: updatedLink.url
+            })
+            fetchLinks()
+        }
+        catch (error) {
+            console.error("Error updating link:", error)
+        }
+    }
+
+    return { links, addNewLink, toggleLink, deleteLink, UpdateLink }
 }
