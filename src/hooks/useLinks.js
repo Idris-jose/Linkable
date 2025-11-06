@@ -2,7 +2,6 @@ import { useState, useEffect } from "react"
 import { useAuth } from "../context/AuthContext"
 import { db } from "../firebase"
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "firebase/firestore"
-import { link } from "framer-motion/client"
 
 export function useLinks() {
     const { user } = useAuth()
