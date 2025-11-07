@@ -17,7 +17,7 @@ export default function QrCode() {
 
   useEffect(() => {
     if (user) {
-      const profileUrl = `${window.location.origin}/profile/${user.uid}`;
+      const profileUrl = `${window.location.origin}/profile/${user.displayName || user.uid}`;
       setQrValue(profileUrl);
     }
   }, [user]);
