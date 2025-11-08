@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { QRCode } from "react-qrcode-logo";
-import { Download, Share2, Copy } from "lucide-react";
+import { Download, Share2, Copy, Sparkles } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import * as htmlToImage from "html-to-image";
+import { useParams } from "react-router-dom";
 
 export default function QrCode() {
   const { user } = useAuth();
@@ -13,25 +14,34 @@ export default function QrCode() {
   const [logoUrl, setLogoUrl] = useState("");
   const [image, setImage] = useState(null);
 
+  const { name } = useParams();
+  const decodedName = decodeURIComponent(name);
   const nodeRef = useRef(null);
 
   useEffect(() => {
     if (user) {
-      const profileUrl = `${window.location.origin}/profile/${user.displayName || user.uid}`;
+      const profileUrl = `${window.location.origin}/profile/${user.uid}`;
       setQrValue(profileUrl);
     }
   }, [user]);
 
   const handleDownload = async () => {
     if (!nodeRef.current) return;
-    const dataUrl = await htmlToImage.toPng(nodeRef.current, {
-      pixelRatio: 2,
-      backgroundColor: "#ffffff",
-    });
-    const link = document.createElement("a");
-    link.download = "qr-code.png";
-    link.href = dataUrl;
-    link.click();
+    try {
+      const dataUrl = await htmlToImage.toPng(nodeRef.current, {
+        pixelRatio: 4, // Increased from 2 to 4 for better quality
+        backgroundColor: "#ffffff",
+        quality: 1.0,
+        cacheBust: true,
+      });
+      const link = document.createElement("a");
+      link.download = "linkable-qr-code.png";
+      link.href = dataUrl;
+      link.click();
+      toast.success("QR code downloaded successfully!");
+    } catch (err) {
+      toast.error("Failed to download QR code");
+    }
   };
 
   const handleShare = async () => {
@@ -62,10 +72,10 @@ export default function QrCode() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-14 w-14 border-4 border-indigo-200 border-t-indigo-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading your QR code...</p>
         </div>
       </div>
     );
@@ -73,136 +83,169 @@ export default function QrCode() {
 
   return (
     <>
-      <Toaster position="top-right" />
-      <div className="min-h-screen p-3 w-full bg-gray-50">
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
-              Custom QR Code
-            </h1>
-            <p className="text-gray-600 text-center mb-8">
-              Customize and download your personal QR code
-            </p>
+      <Toaster 
+        position="top-right"
+      />
+      <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div className="p-6 sm:p-8">
+              {/* Customization Controls */}
+              <div className="mb-8">
+                <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                
+                  Customize Your QR Code
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Foreground Color
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="color"
+                        value={foreground}
+                        onChange={(e) => setForeground(e.target.value)}
+                        className="w-14 h-14 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-indigo-400 transition-colors"
+                      />
+                      <span className="text-xs text-gray-500 font-mono">{foreground}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Background Color
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="color"
+                        value={background}
+                        onChange={(e) => setBackground(e.target.value)}
+                        className="w-14 h-14 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-indigo-400 transition-colors"
+                      />
+                      <span className="text-xs text-gray-500 font-mono">{background}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Center Logo
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (e.target.files[0]) {
+                          setLogoUrl(URL.createObjectURL(e.target.files[0]));
+                        }
+                      }}
+                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Background Image
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (e.target.files[0]) {
+                          setImage(URL.createObjectURL(e.target.files[0]));
+                        }
+                      }}
+                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 cursor-pointer"
+                    />
+                  </div>
+                </div>
+              </div>
 
-            {/* Customization Controls */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Foreground
-                </label>
-                <input
-                  type="color"
-                  value={foreground}
-                  onChange={(e) => setForeground(e.target.value)}
-                  className="w-16 h-10 border rounded"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Background
-                </label>
-                <input
-                  type="color"
-                  value={background}
-                  onChange={(e) => setBackground(e.target.value)}
-                  className="w-16 h-10 border rounded"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Logo
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) =>
-                    setLogoUrl(URL.createObjectURL(e.target.files[0]))
-                  }
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Background Image
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) =>
-                    setImage(URL.createObjectURL(e.target.files[0]))
-                  }
-                />
-              </div>
-            </div>
-
-            {/* QR Display */}
-            <div
-              ref={nodeRef}
-              className="relative w-full flex justify-center items-center rounded-lg border overflow-hidden"
-              style={{
-                background: background,
-                height: 320,
-                position: "relative",
-              }}
-            >
-              {/* Pixelated background image */}
-              {image && (
-                <img
-                  src={image}
-                  alt="QR Background"
-                  className="absolute inset-0 w-full h-full object-cover"
+              {/* QR Display */}
+              <div className="mb-8">
+                <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                  Preview
+                </h2>
+                <div
+                  ref={nodeRef}
+                  className="relative w-full flex flex-col justify-center items-center rounded-xl border-2 border-gray-200 overflow-hidden shadow-lg"
                   style={{
-                    imageRendering: "pixelated",
-                    opacity: 0.6,
-                    filter: "contrast(1.2) saturate(0.8)",
+                    background: background,
+                    minHeight: 420,
                   }}
-                />
-              )}
+                >
+                  {/* Background image */}
+                  {image && (
+                    <img
+                      src={image}
+                      alt="QR Background"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      style={{
+                        imageRendering: "pixelated",
+                        opacity: 0.6,
+                        filter: "contrast(1.2) saturate(0.8)",
+                      }}
+                    />
+                  )}
 
-              <div className="z-10 bg-white/80 p-3 rounded-md shadow-md">
-                <QRCode
-                  value={qrValue}
-                  size={200}
-                  fgColor={foreground}
-                  bgColor="transparent"
-                  logoImage={logoUrl || undefined}
-                  logoWidth={40}
-                  qrStyle="dots"
-                  eyeRadius={5}
-                />
+                  {/* QR Code */}
+                  <div className="z-10 bg-white/95 p-4 rounded-xl shadow-2xl backdrop-blur-sm">
+                    <QRCode
+                      value={qrValue}
+                      size={240}
+                      fgColor={foreground}
+                      bgColor="transparent"
+                      logoImage={logoUrl || undefined}
+                      logoWidth={50}
+                      logoHeight={50}
+                      qrStyle="dots"
+                      eyeRadius={8}
+                      enableCORS={true}
+                    />
+                  </div>
+
+                  {/* Branding Footer */}
+                  <div className="z-10 w-full bg-gradient-to-r from-indigo-600 to-indigo-700 py-4 mt-6">
+                    <p className="text-white text-center font-semibold text-lg tracking-wide">
+                      Made with Linkable
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {/* Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <button
-                onClick={handleDownload}
-                className="flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors"
-              >
-                <Download className="w-5 h-5" />
-                Download
-              </button>
-              <button
-                onClick={handleShare}
-                className="flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
-              >
-                <Share2 className="w-5 h-5" />
-                Share
-              </button>
-              <button
-                onClick={handleCopyLink}
-                className="flex items-center justify-center gap-2 bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                <Copy className="w-5 h-5" />
-                Copy Link
-              </button>
-            </div>
+              {/* Action Buttons */}
+              <div className="mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <button
+                    onClick={handleDownload}
+                    className="flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3.5 rounded-xl hover:bg-indigo-700 transition-all duration-200 font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  >
+                    <Download className="w-5 h-5" />
+                    Download
+                  </button>
+                  <button
+                    onClick={handleShare}
+                    className="flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3.5 rounded-xl hover:bg-green-700 transition-all duration-200 font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  >
+                    <Share2 className="w-5 h-5" />
+                    Share
+                  </button>
+                  <button
+                    onClick={handleCopyLink}
+                    className="flex items-center justify-center gap-2 bg-gray-700 text-white px-6 py-3.5 rounded-xl hover:bg-gray-800 transition-all duration-200 font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  >
+                    <Copy className="w-5 h-5" />
+                    Copy Link
+                  </button>
+                </div>
+              </div>
 
-            {/* Link Display */}
-            <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">
-                Profile Link:
-              </h3>
-              <p className="text-xs text-gray-500 break-all">{qrValue}</p>
+              {/* Link Display */}
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border border-gray-200">
+                <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                  Your Profile Link
+                </h3>
+                <p className="text-sm text-gray-600 break-all font-mono bg-white px-4 py-3 rounded-lg border border-gray-200">
+                  {qrValue}
+                </p>
+              </div>
             </div>
           </div>
         </div>
