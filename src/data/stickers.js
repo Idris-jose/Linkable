@@ -24,6 +24,46 @@ export const stickers = [
     width: 80,
     height: 50
   },
+   {
+    id: "dev-esc",
+    name: "esc",
+    src: "/src/assets/stickers/Esc.png",
+    category: "developer",
+    width: 80,
+    height: 50
+  },
+   {
+    id: "dev-control",
+    name: "undercontrol",
+    src: "/src/assets/stickers/UnderControl.png",
+    category: "developer",
+    width: 80,
+    height: 50
+  },
+   {
+    id: "deveveloper",
+    name: "Developer",
+    src: "/src/assets/stickers/Developer.png",
+    category: "developer",
+    width: 80,
+    height: 50
+  },
+   {
+    id: "dev-BreakingProd",
+    name: "BreakingProd",
+    src: "/src/assets/stickers/BreakingProd.png",
+    category: "developer",
+    width: 80,
+    height: 50
+  },
+   {
+    id: "dev-Metadata",
+    name: "Metadata",
+    src: "/src/assets/stickers/Metadata.png",
+    category: "developer",
+    width: 80,
+    height: 50
+  },
 
   // Beauty Stickers
   {
