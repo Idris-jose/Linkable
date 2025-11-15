@@ -152,10 +152,10 @@ export default function Preview({
       )}
 
       {/* Profile Content Container */}
-      <div className="relative min-h-screen flex items-center justify-center p-4">
-         <div 
-  ref={contentRef} 
-  className={`w-full max-w-md mx-auto relative ${isEditing ? "" : ""}`}
+      <div className="relative min-h-screen flex items-center justify-center p-2 sm:p-4">
+         <div
+  ref={contentRef}
+  className={`w-full max-w-xs sm:max-w-md mx-auto relative ${isEditing ? "" : ""}`}
 >
 
 

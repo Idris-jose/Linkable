@@ -177,12 +177,12 @@ export default function Customize() {
   // Removed auto-save functionality
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Left Panel - Controls */}
       <CustomizeSidebar profile={profile} setProfile={setProfile} />
 
       {/* Right Panel - Live Preview */}
-      <div className="flex-1 p-8 overflow-y-auto">
+      <div className="flex-1 p-4 md:p-8 overflow-y-auto">
         <div className="max-w-md mx-auto">
           <div className="mb-6">
             <h2 className="text-xl font-bold text-gray-900 mb-2">Live Preview</h2>

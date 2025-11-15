@@ -8,17 +8,17 @@ export default function StickerSidebar({ selectedCategory, onCategoryChange }) {
     : stickers;
 
   return (
-    <div className="w-80 bg-white border-r border-gray-200 overflow-y-auto flex-shrink-0">
+    <div className="w-full md:w-80 sm:w-10 bg-white md:border-r border-gray-200 overflow-y-auto flex-shrink-0">
       <div className="p-4 border-b border-gray-200">
         <h2 className="text-lg font-semibold text-gray-900">Sticker Library</h2>
       </div>
 
       {/* Categories */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-3 md:p-4 border-b border-gray-200">
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => onCategoryChange(null)}
-            className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
+            className={`px-2 md:px-3 py-1 rounded-full text-xs md:text-sm whitespace-nowrap ${
               !selectedCategory ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-600'
             }`}
           >
@@ -28,12 +28,12 @@ export default function StickerSidebar({ selectedCategory, onCategoryChange }) {
             <button
               key={category.id}
               onClick={() => onCategoryChange(category.id)}
-              className={`px-3 py-1 rounded-full text-sm whitespace-nowrap flex items-center space-x-1 ${
+              className={`px-2 md:px-3 py-1 rounded-full text-xs md:text-sm whitespace-nowrap flex items-center space-x-1 ${
                 selectedCategory === category.id ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-600'
               }`}
             >
               <span>{category.icon}</span>
-              <span>{category.name}</span>
+              <span className="hidden sm:inline">{category.name}</span>
             </button>
           ))}
         </div>

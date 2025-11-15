@@ -64,7 +64,7 @@ export default function CustomizeSidebar({ profile, setProfile }) {
     return (
         <>
             <Toaster position="top-right" />
-            <div className="w-96 bg-white shadow-lg border-r border-gray-200 overflow-y-auto">
+            <div className="w-full md:w-96 bg-white shadow-lg md:border-r border-gray-200 overflow-y-auto">
                 {/* Header */}
                 <div className="p-6 border-b border-gray-200">
                     <button

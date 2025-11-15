@@ -39,7 +39,7 @@ const Sidebar = () => {
                 <h2 className="text-xl font-bold mb-4 text-black">Linkable</h2>
                 <div className='flex items-center gap-2 mb-8'>
                     <img
-                  src={pfp}
+                  src={user?.displayImage || pfp}
                   className="w-12 h-12 rounded-full object-cover"
                   alt="Employer profile"
                    />

@@ -27,16 +27,16 @@ export default function MyLinks() {
   };
 
     return (
-        <div className="min-h-screen bg-gray-50 px-40 py-6">
+        <div className="min-h-screen bg-gray-50 px-4 sm:px-6 md:px-8 lg:px-40 py-6">
             {/* Header */}
-            <div className="flex justify-between items-center mb-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">My Links</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">My Links</h1>
                     <p className="text-gray-600">Manage and organize your links</p>
                 </div>
                 <button
                 onClick={() => setShowAddLinkModal(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors w-full sm:w-auto">
                     <Plus size={20} />
                     Add Link
                 </button>
@@ -54,7 +54,7 @@ export default function MyLinks() {
             )}
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {linkStats.map((stat, index) => (
                     <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
                         <div className={`text-3xl font-bold mb-2 ${stat.color}`}>

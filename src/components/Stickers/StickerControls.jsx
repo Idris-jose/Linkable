@@ -37,14 +37,14 @@ export default function StickerControls({ selectedSticker, onUpdate, onDeselect 
   };
 
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl p-4 shadow-xl z-50 max-w-sm w-full mx-4">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-gray-900">Sticker Controls</h3>
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl p-3 md:p-4 shadow-xl z-50 max-w-sm w-full mx-4 md:mx-0">
+      <div className="flex justify-between items-center mb-3 md:mb-4">
+        <h3 className="font-semibold text-gray-900 text-sm md:text-base">Sticker Controls</h3>
         <button onClick={onDeselect} className="text-gray-500 hover:text-gray-700">
           <X className="w-4 h-4" />
         </button>
       </div>
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
         <div>
           <label className="text-xs font-medium text-gray-500 block mb-1">Position X</label>
           <input

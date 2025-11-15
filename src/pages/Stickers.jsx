@@ -100,7 +100,7 @@ export default function Stickers() {
   return (
     <DndProvider backend={HTML5Backend}>
       <Toaster position="top-right" />
-      <div className="min-h-screen bg-gray-50 flex">
+      <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
         {/* Sticker Sidebar */}
         <StickerSidebar
           selectedCategory={selectedCategory}
@@ -110,8 +110,8 @@ export default function Stickers() {
         {/* Main Content - Full Preview */}
         <div className="flex-1 flex flex-col">
           {/* Fixed Header */}
-          <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-50 shadow-sm">
-            <div className="flex items-center space-x-4">
+          <div className="bg-white border-b border-gray-200 px-4 md:px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between z-50 shadow-sm space-y-4 md:space-y-0">
+            <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto">
               <button
                 onClick={() => navigate('/Customize')}
                 className="text-sm flex items-center space-x-2 text-gray-600 hover:text-indigo-600 transition-colors"
@@ -119,27 +119,27 @@ export default function Stickers() {
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back to Customize</span>
               </button>
-              <div className="h-6 w-px bg-gray-300"></div>
-              <h1 className="text-xl font-bold text-gray-900">Add Stickers</h1>
-              <span className="text-sm text-gray-500">
+              <div className="hidden md:block h-6 w-px bg-gray-300"></div>
+              <h1 className="text-lg md:text-xl font-bold text-gray-900">Add Stickers</h1>
+              <span className="text-xs md:text-sm text-gray-500">
                 {placedStickers.length} sticker{placedStickers.length !== 1 ? 's' : ''} placed
                 {selectedStickerId && ` | Editing: ${selectedSticker?.name || ''}`}
               </span>
             </div>
-            <div className="flex space-x-2">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full md:w-auto">
               <button
                 onClick={() => {
                   setPlacedStickers([]);
                   setSelectedStickerId(null);
                 }}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center space-x-2"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2"
               >
                 <Trash2 className="w-4 h-4" />
                 <span>Clear All</span>
               </button>
               <button
                 onClick={handleSave}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:shadow-lg flex items-center space-x-2"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:shadow-lg flex items-center justify-center space-x-2"
               >
                 <Save className="w-4 h-4" />
                 <span>Save Stickers</span>
