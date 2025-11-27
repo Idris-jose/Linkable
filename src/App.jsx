@@ -36,7 +36,7 @@ function App() {
      <Route path="/Stickers" element={<LayoutWithSidebar><Stickers/></LayoutWithSidebar>}/>
      <Route path="/Qrcode" element={<LayoutWithSidebar><QrCode/></LayoutWithSidebar>}/>
       <Route path="/Preview" element={<Preview/>}/>
-      <Route path="/profile/:userId" element={<SharedProfile/>}/>
+      <Route path="/:username" element={<SharedProfile />} />
     </Routes>
     </BrowserRouter>
     </AuthProvider>

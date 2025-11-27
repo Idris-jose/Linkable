@@ -1,29 +1,44 @@
 import React, { useRef, useState, useEffect } from "react";
 import { QRCode } from "react-qrcode-logo";
-import { Download, Share2, Copy, Sparkles } from "lucide-react";
+import { Download, Copy, Share2 } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import * as htmlToImage from "html-to-image";
-import { useParams } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 export default function QrCode() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth(); // Get auth state
+  const [username, setUsername] = useState(null);
   const [qrValue, setQrValue] = useState("");
   const [foreground, setForeground] = useState("#000000");
   const [background, setBackground] = useState("#ffffff");
   const [logoUrl, setLogoUrl] = useState("");
   const [image, setImage] = useState(null);
-
-  const { name } = useParams();
-  const decodedName = decodeURIComponent(name);
   const nodeRef = useRef(null);
 
-  useEffect(() => {
-    if (user) {
-      const profileUrl = `${window.location.origin}/profile/${user.uid}`;
-      setQrValue(profileUrl);
-    }
+ useEffect(() => {
+    if (!user) return; // wait for user
+
+    const fetchUsername = async () => {
+      try {
+        const profileRef = doc(db, "users", user.uid, "profile", "data");
+        const snap = await getDoc(profileRef);
+        if (snap.exists()) {
+          const uname = snap.data().username;
+          setUsername(uname);
+          setQrValue(`${window.location.origin}/${uname}`);
+        } else {
+          console.warn("Username not found in Firestore yet!");
+        }
+      } catch (err) {
+        console.error("Error fetching username:", err);
+      }
+    };
+
+    fetchUsername();
   }, [user]);
+
 
   const handleDownload = async () => {
     if (!nodeRef.current) return;

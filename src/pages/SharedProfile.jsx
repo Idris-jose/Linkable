@@ -20,33 +20,43 @@ import {
   ArrowLeft
 } from "lucide-react";
 export default function SharedProfile() {
-  const { userId } = useParams();
+  const { username } = useParams();
   const [profile, setProfile] = useState(null);
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const profileDoc = await getDoc(doc(db, "users", userId, "profile", "data"));
-        if (profileDoc.exists()) {
-          setProfile(profileDoc.data());
-        }
+useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      // Look up the UID from username
+      const usernameRef = doc(db, "usernames", username);
+      const usernameSnap = await getDoc(usernameRef);
 
-        const linksSnapshot = await getDocs(collection(db, "users", userId, "links"));
-        const linksData = linksSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setLinks(linksData.filter(link => link.active));
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      } finally {
+      if (!usernameSnap.exists()) {
+        setProfile(null);
         setLoading(false);
+        return;
       }
-    };
 
-    if (userId) {
-      fetchProfile();
+      const userId = usernameSnap.data().userId;
+
+      // Fetch profile
+      const profileDoc = await getDoc(doc(db, "users", userId, "profile", "data"));
+      if (profileDoc.exists()) setProfile(profileDoc.data());
+
+      // Fetch links
+      const linksSnapshot = await getDocs(collection(db, "users", userId, "links"));
+      const linksData = linksSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setLinks(linksData.filter(link => link.active));
+    } catch (err) {
+      console.error("Error fetching profile:", err);
+    } finally {
+      setLoading(false);
     }
-  }, [userId]);
+  };
+
+  fetchProfile();
+}, [username]);
 
   if (loading) {
     return (
