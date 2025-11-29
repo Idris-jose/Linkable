@@ -67,9 +67,8 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  // -------------------------
-  // Google Sign-In
-  // -------------------------
+
+ 
   const signInWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
