@@ -17,12 +17,12 @@ export default function Signup() {
     const { signInWithGoogle, signUpWithEmail } = useAuth();
 
     const handleSigninClick = () => {
-         navigate('/Login');
+        navigate('/Login');
     };
 
     const handleBackClick = () => {
         // Navigate back
-       navigate(-1);
+        navigate(-1);
     };
 
     const handleGoogleSignUp = async () => {
@@ -71,15 +71,15 @@ export default function Signup() {
                     className="flex items-center gap-3 px-4 py-3 ml-6 pt-6 rounded-lg hover:bg-white/60 transition-all duration-200"
                     onClick={handleBackClick}
                 >
-                    <ArrowLeft className="w-4 h-4" /> 
+                    <ArrowLeft className="w-4 h-4" />
                     <span className="font-medium">Back</span>
                 </button>
-                
+
                 <div className="flex flex-col justify-center items-center min-h-[80vh] px-4">
                     <div className="bg-white/80 backdrop-blur-sm shadow-2xl rounded-2xl shadow-black/20 w-full max-w-md border border-white/20">
                         <div className="p-10 space-y-6">
                             <div className="text-center space-y-2">
-                               
+
                                 <h2 className="text-3xl font-bold bg-blue-700 bg-clip-text text-transparent">
                                     Join Linkable
                                 </h2>
@@ -88,19 +88,19 @@ export default function Signup() {
                                 </p>
                             </div>
 
-                           <button
-                            type="button"
-                            onClick={handleGoogleSignUp}
-                            disabled={loading}
-                            className="flex items-center justify-center gap-2 border px-6 py-2 w-full rounded border-gray-300 hover:bg-gray-100 transition disabled:opacity-50"
-                        >
-                            <img
-                                src="https://www.svgrepo.com/show/475656/google-color.svg"
-                                alt="Google"
-                                className="w-5 h-5"
-                            />
-                            <span className="font-medium">Continue with Google</span>
-                        </button>
+                            <button
+                                type="button"
+                                onClick={handleGoogleSignUp}
+                                disabled={loading}
+                                className="flex items-center justify-center gap-2 border px-6 py-2 w-full rounded border-gray-300 hover:bg-gray-100 transition disabled:opacity-50"
+                            >
+                                <img
+                                    src="https://www.svgrepo.com/show/475656/google-color.svg"
+                                    alt="Google"
+                                    className="w-5 h-5"
+                                />
+                                <span className="font-medium">Continue with Google</span>
+                            </button>
 
                             <div className="relative">
                                 <div className="absolute inset-0 flex items-center">
@@ -210,8 +210,8 @@ export default function Signup() {
                                     </div>
                                 </div>
 
-                               
-                               
+
+
                             </div>
 
                             {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -226,15 +226,15 @@ export default function Signup() {
                                 {loading ? 'Creating account...' : 'Create your account'}
                             </button>
 
-                           <p className="text-blue-800 text-center mt-5 text-sm">
-                            Already have an account?{' '}
-                            <span
-                                className="text-purple-700 hover:underline cursor-pointer"
-                                onClick={handleSigninClick}
-                            >
-                                Sign in
-                            </span>
-                        </p>
+                            <p className="text-blue-800 text-center mt-5 text-sm">
+                                Already have an account?{' '}
+                                <span
+                                    className="text-purple-700 hover:underline cursor-pointer"
+                                    onClick={handleSigninClick}
+                                >
+                                    Sign in
+                                </span>
+                            </p>
                         </div>
                     </div>
                 </div>

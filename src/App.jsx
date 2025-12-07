@@ -1,5 +1,5 @@
 import LandingPage from "./LandingPage/LandingPage"
-import { BrowserRouter,Routes,Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Signup from "./Auth/Signup"
 import Login from "./Auth/Login"
 import Sidebar from "./Navigation/sidebar"
@@ -10,6 +10,7 @@ import Preview from "./pages/Preview"
 import Stickers from "./pages/Stickers"
 import SharedProfile from "./pages/SharedProfile"
 import { AuthProvider } from "./context/AuthContext"
+import { Toaster } from "react-hot-toast"
 
 function LayoutWithSidebar({ children }) {
   return (
@@ -25,21 +26,22 @@ function LayoutWithSidebar({ children }) {
 function App() {
   return (
     <>
-     <AuthProvider>
-    <BrowserRouter>
-    <Routes>
-     <Route path="/" element={<LandingPage/>}/>
-     <Route path="/Login" element={<Login/>}/>
-     <Route path="/Signup" element={<Signup/>}/>
-     <Route path="/Mylinks" element={<LayoutWithSidebar><Mylinks/></LayoutWithSidebar>}/>
-     <Route path="/Customize" element={<LayoutWithSidebar><Customize/></LayoutWithSidebar>}/>
-     <Route path="/Stickers" element={<LayoutWithSidebar><Stickers/></LayoutWithSidebar>}/>
-     <Route path="/Qrcode" element={<LayoutWithSidebar><QrCode/></LayoutWithSidebar>}/>
-      <Route path="/Preview" element={<Preview/>}/>
-      <Route path="/:username" element={<SharedProfile />} />
-    </Routes>
-    </BrowserRouter>
-    </AuthProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Toaster position="top-center" />
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/Signup" element={<Signup />} />
+            <Route path="/Mylinks" element={<LayoutWithSidebar><Mylinks /></LayoutWithSidebar>} />
+            <Route path="/Customize" element={<LayoutWithSidebar><Customize /></LayoutWithSidebar>} />
+            <Route path="/Stickers" element={<LayoutWithSidebar><Stickers /></LayoutWithSidebar>} />
+            <Route path="/Qrcode" element={<LayoutWithSidebar><QrCode /></LayoutWithSidebar>} />
+            <Route path="/Preview" element={<Preview />} />
+            <Route path="/:username" element={<SharedProfile />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </>
   )
 }

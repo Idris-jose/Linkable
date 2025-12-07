@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-export default function Login(){
+export default function Login() {
     const navigate = useNavigate();
     const { signInWithGoogle, signInWithEmail } = useAuth();
     const [email, setEmail] = useState('');
@@ -73,15 +73,15 @@ export default function Login(){
                             />
                             <span className="font-medium">Continue with Google</span>
                         </button>
-                            
-                            <div className="relative">
-                                <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-gray-200"></div>
-                                </div>
-                                <div className="relative flex justify-center text-sm">
-                                    <span className="px-4 bg-white text-gray-500 font-medium">or</span>
-                                </div>
+
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-200"></div>
                             </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-4 bg-white text-gray-500 font-medium">or</span>
+                            </div>
+                        </div>
 
 
                         <div>

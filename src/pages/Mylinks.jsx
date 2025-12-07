@@ -3,15 +3,31 @@ import { useState } from "react"
 import AddLink from "../modals/AddLink"
 import { useLinks } from "../hooks/useLinks"
 import EditLink from "../modals/EditLink"
+import { DndProvider } from "react-dnd"
+import { HTML5Backend } from "react-dnd-html5-backend"
+import SortableLinkItem from "../components/SortableLinkItem"
+import { useCallback } from "react"
 
 
 export default function MyLinks() {
-    const { links, addNewLink, toggleLink, deleteLink, UpdateLink } = useLinks()
+    const { links, addNewLink, toggleLink, deleteLink, UpdateLink, updateLocalLinks, saveLinksOrder } = useLinks()
     const [showAddLinkModal, setShowAddLinkModal] = useState(false);
     const [showEditLinkModal, setShowEditLinkModal] = useState(false);
     const [selectedLink, setSelectedLink] = useState(null);
 
-   const totalLinks = links.length
+    const moveLink = useCallback((dragIndex, hoverIndex) => {
+        const dragLink = links[dragIndex]
+        const newLinks = [...links]
+        newLinks.splice(dragIndex, 1)
+        newLinks.splice(hoverIndex, 0, dragLink)
+        updateLocalLinks(newLinks)
+    }, [links, updateLocalLinks])
+
+    const handleDrop = useCallback(() => {
+        saveLinksOrder(links)
+    }, [links, saveLinksOrder])
+
+    const totalLinks = links.length
     const activeLinks = links.filter(link => link.active).length
     const inactiveLinks = totalLinks - activeLinks
 
@@ -22,21 +38,21 @@ export default function MyLinks() {
     ]
 
     const handleEditClick = (link) => {
-    setSelectedLink(link);
-    setShowEditLinkModal(true);
-  };
+        setSelectedLink(link);
+        setShowEditLinkModal(true);
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 px-4 sm:px-6 md:px-8 lg:px-40 py-6">
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                 <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">My Links</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 font-display">My Links</h1>
                     <p className="text-gray-600">Manage and organize your links</p>
                 </div>
                 <button
-                onClick={() => setShowAddLinkModal(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors w-full sm:w-auto">
+                    onClick={() => setShowAddLinkModal(true)}
+                    className="bg-blue-600 text-white px-6 py-2 rounded-full flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20 w-full sm:w-auto font-medium">
                     <Plus size={20} />
                     Add Link
                 </button>
@@ -46,18 +62,20 @@ export default function MyLinks() {
 
 
             {showEditLinkModal && selectedLink && (
-            <EditLink
-            link={selectedLink}
-            onEdit={UpdateLink}
-            onCancel={() => setShowEditLinkModal(false)}
-            />
+                <EditLink
+                    link={selectedLink}
+                    onEdit={UpdateLink}
+                    onCancel={() => setShowEditLinkModal(false)}
+                />
             )}
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {linkStats.map((stat, index) => (
-                    <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
-                        <div className={`text-3xl font-bold mb-2 ${stat.color}`}>
+                    <div key={index} className="bg-white p-6 rounded-xl shadow-sm text-center">
+                        <div className={`text-3xl font-bold mb-2 ${stat.title === 'Active' ? 'text-green-600' :
+                            stat.title === 'Inactive' ? 'text-gray-400' : 'text-gray-800'
+                            }`}>
                             {stat.number}
                         </div>
                         <div className="text-gray-600 text-sm font-medium">
@@ -68,77 +86,22 @@ export default function MyLinks() {
             </div>
 
             {/* Links List */}
-            <div className="space-y-3">
-                {links.map((link) => (
-                    <div key={link.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                {/* Drag Handle */}
-                                <div className="text-gray-400 cursor-move">
-                                    <svg width="12" height="20" viewBox="0 0 12 20" fill="currentColor">
-                                        <circle cx="4" cy="4" r="2"/>
-                                        <circle cx="4" cy="10" r="2"/>
-                                        <circle cx="4" cy="16" r="2"/>
-                                        <circle cx="8" cy="4" r="2"/>
-                                        <circle cx="8" cy="10" r="2"/>
-                                        <circle cx="8" cy="16" r="2"/>
-                                    </svg>
-                                </div>
-
-                                {/* Link Info */}
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-3">
-                                        <h3 className="font-medium text-gray-900">{link.title}</h3>
-                                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                                            link.active
-                                                ? 'bg-green-100 text-green-700'
-                                                : 'bg-gray-100 text-gray-600'
-                                        }`}>
-                                            {link.status}
-                                        </span>
-                                    </div>
-                                    <p className="text-gray-500 text-sm mt-1">{link.url}</p>
-                                </div>
-                            </div>
-
-                            {/* Actions */}
-                            <div className="flex items-center gap-3">
-                                {/* Toggle Switch */}
-                                <label className="relative inline-flex items-center cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        checked={link.active}
-                                        onChange={() => toggleLink(link.id)}
-                                        className="sr-only peer"
-                                    />
-                                    <div className={`relative w-11 h-6 rounded-full transition-colors duration-200 ease-in-out ${
-                                        link.active ? 'bg-black' : 'bg-gray-300'
-                                    }`}>
-                                        <div className={`absolute top-0.5 left-0.5 bg-white border border-gray-300 rounded-full h-5 w-5 transition-transform duration-200 ease-in-out ${
-                                            link.active ? 'translate-x-5 ' : 'translate-x-0'
-                                        }`}></div>
-                                    </div>
-                                </label>
-
-                                {/* Edit Button */}
-                                <button
-                                onClick={() => handleEditClick(link)}
-                                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                                    <Edit size={16} />
-                                </button>
-
-                                {/* Delete Button */}
-                                <button
-                                    onClick={() => deleteLink(link.id)}
-                                    className="p-2  text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                >
-                                    <Trash2 size={16} />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <DndProvider backend={HTML5Backend}>
+                <div className="space-y-3">
+                    {links.map((link, index) => (
+                        <SortableLinkItem
+                            key={link.id}
+                            index={index}
+                            link={link}
+                            moveLink={moveLink}
+                            onDrop={handleDrop}
+                            onToggle={toggleLink}
+                            onEdit={handleEditClick}
+                            onDelete={deleteLink}
+                        />
+                    ))}
+                </div>
+            </DndProvider>
         </div>
     )
 }
